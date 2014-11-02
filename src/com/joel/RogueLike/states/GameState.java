@@ -2,20 +2,20 @@ package com.joel.RogueLike.states;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.joel.RogueLike.handlers.BoundedCamera;
 import com.joel.RogueLike.handlers.GameStateManager;
 import com.joel.RogueLike.main.Game;
 
 public abstract class GameState {
-
-
+	
 	protected GameStateManager gsm;
 	protected Game game;
 	
 	protected SpriteBatch sb;
-	protected OrthographicCamera cam;
+	protected BoundedCamera cam;
 	protected OrthographicCamera hudCam;
 	
-	public GameState(GameStateManager gsm){
+	protected GameState(GameStateManager gsm) {
 		this.gsm = gsm;
 		game = gsm.game();
 		sb = game.getSpriteBatch();
