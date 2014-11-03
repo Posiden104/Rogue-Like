@@ -55,17 +55,18 @@ public class GameButton {
 	
 	public void update(float dt) {
 		
-		vec.set(BBInput.x, BBInput.y, 0);
+		vec.set(MyInput.x, MyInput.y, 0);
 		cam.unproject(vec);
 		
-		if(BBInput.isPressed() &&
-			vec.x > x - width / 2 && vec.x < x + width / 2 &&
-			vec.y > y - height / 2 && vec.y < y + height / 2) {
-			clicked = true;
-		}
-		else {
-			clicked = false;
-		}
+		// Touch input Stuff
+//		if(MyInputProcessor.keyDown() &&
+//			vec.x > x - width / 2 && vec.x < x + width / 2 &&
+//			vec.y > y - height / 2 && vec.y < y + height / 2) {
+//			clicked = true;
+//		}
+//		else {
+//			clicked = false;
+//		}
 		
 	}
 	

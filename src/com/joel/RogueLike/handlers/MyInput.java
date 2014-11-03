@@ -1,7 +1,11 @@
 package com.joel.RogueLike.handlers;
 
+
 public class MyInput {
 	
+	public static int x;
+	public static int y;
+
 	public static boolean[] keys;
 	public static boolean[] pkeys;
 	

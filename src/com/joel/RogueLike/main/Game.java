@@ -5,15 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.joel.RogueLike.handlers.BBInput;
-import com.joel.RogueLike.handlers.BBInputProcessor;
 import com.joel.RogueLike.handlers.BoundedCamera;
 import com.joel.RogueLike.handlers.Content;
 import com.joel.RogueLike.handlers.GameStateManager;
+import com.joel.RogueLike.handlers.MyInput;
+import com.joel.RogueLike.handlers.MyInputProcessor;
 
 public class Game implements ApplicationListener {
 	
-	public static final String TITLE = "Block Bunny";
+	public static final String TITLE = "Rogue-Like";
 	public static final int V_WIDTH = 320;
 	public static final int V_HEIGHT = 240;
 	public static final int SCALE = 2;
@@ -30,28 +30,19 @@ public class Game implements ApplicationListener {
 	public void create() {
 		
 		Texture.setEnforcePotImages(false);
-		Gdx.input.setInputProcessor(new BBInputProcessor());
+		Gdx.input.setInputProcessor(new MyInputProcessor());
 		
-		res = new Content();
-		res.loadTexture("res/images/menu.png");
-		res.loadTexture("res/images/bgs.png");
-		res.loadTexture("res/images/hud.png");
-		res.loadTexture("res/images/bunny.png");
-		res.loadTexture("res/images/crystal.png");
-		res.loadTexture("res/images/spikes.png");
+		res = new Content(); // load all sprites and music
 		
-		res.loadSound("res/sfx/jump.wav");
-		res.loadSound("res/sfx/crystal.wav");
-		res.loadSound("res/sfx/levelselect.wav");
-		res.loadSound("res/sfx/hit.wav");
-		res.loadSound("res/sfx/changeblock.wav");
+//		res.loadTexture("res/images/menu.png");
+//		res.loadSound("res/sfx/jump.wav");
+//		
+//		res.loadMusic("res/music/bbsong.ogg");
+//		res.getMusic("bbsong").setLooping(true);
+//		res.getMusic("bbsong").setVolume(0.5f);
+//		res.getMusic("bbsong").play();
 		
-		res.loadMusic("res/music/bbsong.ogg");
-		res.getMusic("bbsong").setLooping(true);
-		res.getMusic("bbsong").setVolume(0.5f);
-		res.getMusic("bbsong").play();
-		
-		cam = new BoundedCamera();
+		cam = new BoundedCamera(); // used to limit camera 
 		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
 		hudCam = new OrthographicCamera();
 		hudCam.setToOrtho(false, V_WIDTH, V_HEIGHT);
@@ -68,7 +59,7 @@ public class Game implements ApplicationListener {
 		
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render();
-		BBInput.update();
+		MyInput.update();
 		
 	}
 	
