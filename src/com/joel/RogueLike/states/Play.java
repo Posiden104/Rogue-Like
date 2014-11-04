@@ -8,15 +8,22 @@ import com.joel.RogueLike.handlers.BoundedCamera;
 import com.joel.RogueLike.handlers.GameStateManager;
 import com.joel.RogueLike.handlers.MyInput;
 import com.joel.RogueLike.main.Game;
+import com.joel.RogueLike.map.Map;
 
 public class Play extends GameState {
 
 	private BoundedCamera boundedCam;
-	private Player player;
+	
+	public static Player player;
+	
 	// private Array<Entity> entities;
+	
 	private HUD hud;
+	
 	public static int level;
 
+	public static Map map;
+	
 	public Play(GameStateManager gsm) {
 		super(gsm);
 
@@ -25,12 +32,15 @@ public class Play extends GameState {
 		boundedCam.setToOrtho(false, Game.V_WIDTH, Game.V_HEIGHT);
 		boundedCam.setBounds(0, Game.V_WIDTH, 0, Game.V_HEIGHT);
 
+		// create player
 		Entity e = new Entity(100, 200, 200);
-
 		player = new Player(e);
-
+ 
 		// create hud
 		hud = new HUD(player);
+		
+		// create map
+		map = new Map();
 	}
 
 	public void handleInput() {
@@ -51,6 +61,9 @@ public class Play extends GameState {
 	public void update(float dt) {
 		handleInput();
 		player.update(dt);
+
+		// update the map
+		map.update(dt);
 	}
 
 	public void render() {
@@ -59,11 +72,16 @@ public class Play extends GameState {
 		boundedCam.setPosition(player.getX() + Game.V_WIDTH / 4, Game.V_HEIGHT / 2);
 		boundedCam.update();
 
+		// render map
+		map.render(sb);
+		
+		// render player
 		sb.setProjectionMatrix(boundedCam.combined);
 		player.render(sb);
 
+		// render HUD
 		sb.setProjectionMatrix(hudCam.combined);
-		hud.render(sb, this);
+		hud.render(sb);
 
 		// draw tilemap
 		// tmRenderer.setView(cam);
@@ -71,7 +89,7 @@ public class Play extends GameState {
 
 	}
 
-	public Vector2 getPlayerOffset() {
+	public static Vector2 getPlayerOffset() {
 		return player.getOffset();
 	}
 

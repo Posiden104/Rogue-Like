@@ -29,13 +29,13 @@ public class HUD {
 		
 	}
 	
-	public void render(SpriteBatch sb, Play play) {
+	public void render(SpriteBatch sb) {
 		
 		sb.begin();
 		
 		// draw crystal amount
 //		drawString(sb, player.getNumCrystals() + " / " + player.getTotalCrystals(), 132, 211);
-		drawString(sb, "100 / 100", 132 - play.getPlayerOffset().x, 211 - play.getPlayerOffset().y);
+		drawString(sb, "100 / 100", 132 - Play.getPlayerOffset().x, 211 - Play.getPlayerOffset().y);
 		
 		sb.end();
 		

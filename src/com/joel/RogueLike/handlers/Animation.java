@@ -56,6 +56,17 @@ public class Animation {
 			timesPlayed++;
 		}
 	}
+
+	public void addFrames(TextureRegion[] framesToAdd) {
+		TextureRegion[] prev = frames;
+		frames = new TextureRegion[frames.length + framesToAdd.length];
+		for(int i = 0; i < prev.length; i++) {
+			frames[i] = prev[i];
+		}
+		for(int i = prev.length; i < prev.length + framesToAdd.length; i++) {
+			frames[i] = framesToAdd[i];
+		}
+	}
 	
 	public TextureRegion getFrame() { return frames[currentFrame]; }
 	public int getTimesPlayed() { return timesPlayed; }

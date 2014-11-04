@@ -37,6 +37,8 @@ public class Game implements ApplicationListener {
 		
 		res.loadTexture("res/images/hud.png");
 		res.loadTexture("res/players/dragon.png");
+		res.loadTexture("res/images/grey_floor.png");
+		res.loadTexture("res/images/grey_wall.png");
 
 //		res.loadTexture("res/images/menu.png");
 //		res.loadSound("res/sfx/jump.wav");
