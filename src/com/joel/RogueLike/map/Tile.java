@@ -13,7 +13,7 @@ public class Tile extends Sprite{
 	private Animation animation;
 	
 	private int x;
-	private int y;
+	private int y; 
 	
 	public Tile(TextureRegion tex, int x, int y) {
 //		this.tex = new TextureRegion[] { tex };

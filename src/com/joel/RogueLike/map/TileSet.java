@@ -17,7 +17,7 @@ public class TileSet extends Sprite{
 	}
 	
 	public TileSet(Texture tex, int w, int h) {
-		tiles = split(tex, w, h);
+		tiles = TextureRegion.split(tex, w, h);
 	}
 	
 	public TextureRegion getTile(int x, int y) {

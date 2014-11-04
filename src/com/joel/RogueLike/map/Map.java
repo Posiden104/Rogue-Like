@@ -48,12 +48,13 @@ public class Map {
 	
 	public void update(float dt) {
 		for(Tile[] t : map) {
-			for(Tile t2 : t) {
+			for(@SuppressWarnings("unused") Tile t2 : t) {
 //				t2.update(dt);
 			}
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	public void render(SpriteBatch sb) {
 		for(Tile[] t : map) {
 			for(Tile t2 : t) {

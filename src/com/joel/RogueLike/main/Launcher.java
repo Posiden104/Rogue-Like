@@ -3,13 +3,14 @@ package com.joel.RogueLike.main;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
+
 /*
  *
  * @author Posiden104
  * 
  */
 
-public class Main {
+public class Launcher {
 
 	public static final String TITLE = "Rogue Like";
 	public static final String VERSION = "v0.1a";
