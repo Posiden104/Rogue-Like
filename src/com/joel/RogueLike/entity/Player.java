@@ -30,7 +30,7 @@ public class Player extends Sprite {
 	
 	public void render(SpriteBatch sb) {
 		sb.begin();
-		sb.draw(animation.getFrame(), Game.V_WIDTH / 2 - 8, Game.V_HEIGHT / 2);
+		sb.draw(animation.getFrame(), Game.V_WIDTH / 2 - 8, Game.V_HEIGHT / 2 - 8);
 		sb.end();
 	}
 
@@ -44,16 +44,16 @@ public class Player extends Sprite {
 	public void move(int dir) {
 		switch(dir) {
 		case 0: // north
-			entity.y++;
+			entity.y += 16;
 			break;
 		case 1: // east
-			entity.x--;
+			entity.x -= 16;
 			break;
 		case 2: // south
-			entity.y--;
+			entity.y -= 16;
 			break;
 		case 3: // west
-			entity.x++;
+			entity.x += 16;
 			break;
 		}
 	}

@@ -1,8 +1,5 @@
 package com.joel.RogueLike.states;
 
-import com.badlogic.gdx.graphics.GL20;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.joel.RogueLike.entity.Entity;
 import com.joel.RogueLike.entity.HUD;
@@ -37,16 +34,16 @@ public class Play extends GameState {
 	}
 
 	public void handleInput() {
-		if (MyInput.isDown(MyInput.KEY_UP)) {
+		if (MyInput.isDown(MyInput.KEY_UP) && (MyInput.isPressed(MyInput.KEY_UP))) {
 			player.move(0);
 		}
-		if (MyInput.isDown(MyInput.KEY_LEFT)) {
+		if (MyInput.isDown(MyInput.KEY_LEFT) && (MyInput.isPressed(MyInput.KEY_LEFT))) {
 			player.move(1);
 		}
-		if (MyInput.isDown(MyInput.KEY_DOWN)) {
+		if (MyInput.isDown(MyInput.KEY_DOWN) && (MyInput.isPressed(MyInput.KEY_DOWN))) {
 			player.move(2);
 		}
-		if (MyInput.isDown(MyInput.KEY_RIGHT)) {
+		if (MyInput.isDown(MyInput.KEY_RIGHT) && (MyInput.isPressed(MyInput.KEY_RIGHT))) {
 			player.move(3);
 		}
 	}
