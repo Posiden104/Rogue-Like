@@ -3,32 +3,21 @@ package com.joel.RogueLike.entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.joel.RogueLike.handlers.B2DVars;
 import com.joel.RogueLike.main.Game;
+import com.joel.RogueLike.states.Play;
 
 public class HUD {
 	
-	private Player player;
+//	private Player player;
 	
-	private TextureRegion container;
-	private TextureRegion[] blocks;
-	private TextureRegion crystal;
 	private TextureRegion[] font;
 	
 	public HUD(Player player) {
 		
-		this.player = player;
+//		this.player = player;
 		
 		Texture tex = Game.res.getTexture("hud");
 		
-		container = new TextureRegion(tex, 0, 0, 32, 32);
-		
-		blocks = new TextureRegion[3];
-		for(int i = 0; i < blocks.length; i++) {
-			blocks[i] = new TextureRegion(tex, 32 + i * 16, 0, 16, 16);
-		}
-		
-		crystal = new TextureRegion(tex, 80, 0, 16, 16);
 		
 		font = new TextureRegion[11];
 		for(int i = 0; i < 6; i++) {
@@ -40,35 +29,19 @@ public class HUD {
 		
 	}
 	
-	public void render(SpriteBatch sb) {
+	public void render(SpriteBatch sb, Play play) {
 		
 		sb.begin();
 		
-		// draw container
-		sb.draw(container, 32, 200);
-		
-		// draw blocks
-		short bits = player.getBody().getFixtureList().first().getFilterData().maskBits;
-		if((bits & B2DVars.BIT_RED_BLOCK) != 0) {
-			sb.draw(blocks[0], 40, 208);
-		}
-		else if((bits & B2DVars.BIT_GREEN_BLOCK) != 0) {
-			sb.draw(blocks[1], 40, 208);
-		}
-		else if((bits & B2DVars.BIT_BLUE_BLOCK) != 0) {
-			sb.draw(blocks[2], 40, 208);
-		}
-		
-		// draw crystal
-		sb.draw(crystal, 100, 208);
-		
 		// draw crystal amount
-		drawString(sb, player.getNumCrystals() + " / " + player.getTotalCrystals(), 132, 211);
+//		drawString(sb, player.getNumCrystals() + " / " + player.getTotalCrystals(), 132, 211);
+		drawString(sb, "100 / 100", 132 - play.getPlayerOffset().x, 211 - play.getPlayerOffset().y);
 		
 		sb.end();
 		
 	}
 	
+//	@SuppressWarnings("unused")
 	private void drawString(SpriteBatch sb, String s, float x, float y) {
 		for(int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);

@@ -1,10 +1,6 @@
 package com.joel.RogueLike.states;
 
-import static com.joel.RogueLike.handlers.B2DVars.PPM;
-
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.Vector2;
 import com.joel.RogueLike.entity.Entity;
 import com.joel.RogueLike.entity.HUD;
 import com.joel.RogueLike.entity.Player;
@@ -14,38 +10,26 @@ import com.joel.RogueLike.main.Game;
 
 public class Play extends GameState {
 	
-//	private boolean debug = false;
-	
-	private BoundedCamera b2dCam;
-	
+	private BoundedCamera boundedCam;
 	private Player player;
-	
-	private TiledMap tileMap;
-	private int tileMapWidth;
-	private int tileMapHeight;
-	private int tileSize;
-	private OrthogonalTiledMapRenderer tmRenderer;
-	
-	private Array<Entity> entities;
-	
+//	private Array<Entity> entities;
 	private HUD hud;
-	
 	public static int level;
 	
 	public Play(GameStateManager gsm) {
-		
 		super(gsm);
-		
-		cam.setBounds(0, tileMapWidth * tileSize, 0, tileMapHeight * tileSize);
 
+		// set up bounded camera
+		boundedCam = new BoundedCamera();
+		boundedCam.setToOrtho(false, Game.V_WIDTH, Game.V_HEIGHT);
+		boundedCam.setBounds(0, Game.V_WIDTH, 0, Game.V_HEIGHT);
+		
+		Entity e = new Entity(100, 200, 200);
+		
+		player = new Player(e);
+		
 		// create hud
 		hud = new HUD(player);
-		
-		// set up box2d cam
-		b2dCam = new BoundedCamera();
-		b2dCam.setToOrtho(false, Game.V_WIDTH / PPM, Game.V_HEIGHT / PPM);
-		b2dCam.setBounds(0, (tileMapWidth * tileSize) / PPM, 0, (tileMapHeight * tileSize) / PPM);
-		
 	}
 	
 	public void handleInput() {
@@ -53,19 +37,30 @@ public class Play extends GameState {
 	}
 	
 	public void update(float dt) {
-	
+		player.update(dt);
 	}
 	
 	public void render() {
 		
 		// camera follow player
-		cam.setPosition(player.getPosition().x * PPM + Game.V_WIDTH / 4, Game.V_HEIGHT / 2);
-		cam.update();
+		boundedCam.setPosition(player.getX() + Game.V_WIDTH / 4, Game.V_HEIGHT / 2);
+		boundedCam.update();
+		
+		sb.setProjectionMatrix(boundedCam.combined);
+		player.render(sb);
+
+		
+		sb.setProjectionMatrix(hudCam.combined);
+		hud.render(sb, this);
 		
 		// draw tilemap
-		tmRenderer.setView(cam);
-		tmRenderer.render();
+//		tmRenderer.setView(cam);
+//		tmRenderer.render();
 		
+	}
+	
+	public Vector2 getPlayerOffset() {
+		return player.getOffset();
 	}
 	
 	public void dispose() {

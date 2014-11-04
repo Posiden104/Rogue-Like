@@ -9,9 +9,13 @@ public class MyInput {
 	public static boolean[] keys;
 	public static boolean[] pkeys;
 	
-	public static final int NUM_KEYS = 2;
-	public static final int BUTTON1 = 0;
-	public static final int BUTTON2 = 1;
+	public static final int NUM_KEYS = 6;
+	public static final int KEY_Z = 0;
+	public static final int KEY_X= 1;
+	public static final int KEY_UP = 2;
+	public static final int KEY_DOWN = 3;
+	public static final int KEY_LEFT = 4;
+	public static final int KEY_RIGHT = 5;
 	
 	static {
 		keys = new boolean[NUM_KEYS];

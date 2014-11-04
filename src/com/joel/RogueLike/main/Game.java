@@ -34,13 +34,16 @@ public class Game implements ApplicationListener {
 		
 		res = new Content(); // load all sprites and music
 		
+		res.loadTexture("res/images/hud.png");
+		res.loadTexture("res/players/dragon.png");
+
 //		res.loadTexture("res/images/menu.png");
 //		res.loadSound("res/sfx/jump.wav");
-//		
-//		res.loadMusic("res/music/bbsong.ogg");
-//		res.getMusic("bbsong").setLooping(true);
-//		res.getMusic("bbsong").setVolume(0.5f);
-//		res.getMusic("bbsong").play();
+		
+//		res.loadMusic("res/music/hello.ogg");
+//		res.getMusic("hello").setLooping(true);
+//		res.getMusic("hello").setVolume(0.5f);
+//		res.getMusic("hello").play();
 		
 		cam = new BoundedCamera(); // used to limit camera 
 		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);

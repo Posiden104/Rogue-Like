@@ -2,23 +2,20 @@ package com.joel.RogueLike.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.joel.RogueLike.handlers.Animation;
-import com.joel.RogueLike.handlers.B2DVars;
 
 /**
  * Attaches animated sprites to box2d bodies
  */
-public class B2DSprite {
+public class Sprite{
 	
-	protected Body body;
+	protected Entity entity;
 	protected Animation animation;
 	protected float width;
 	protected float height;
 	
-	public B2DSprite(Body body) {
-		this.body = body;
+	public Sprite(Entity entity) {
+		this.entity = entity;
 		animation = new Animation();
 	}
 	
@@ -38,12 +35,13 @@ public class B2DSprite {
 	
 	public void render(SpriteBatch sb) {
 		sb.begin();
-		sb.draw(animation.getFrame(), (body.getPosition().x * B2DVars.PPM - width / 2), (int) (body.getPosition().y * B2DVars.PPM - height / 2));
+		sb.draw(animation.getFrame(), entity.getX(), entity.getY());
 		sb.end();
 	}
 	
-	public Body getBody() { return body; }
-	public Vector2 getPosition() { return body.getPosition(); }
+	public Entity getEntity() { return entity; }
+	public int getX() { return entity.getX(); }
+	public int getY() { return entity.getY(); }
 	public float getWidth() { return width; }
 	public float getHeight() { return height; }
 	
