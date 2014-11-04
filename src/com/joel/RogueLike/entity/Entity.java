@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Entity {
 
-	private int hp; // Health Points determine life force
-	private int str; // Strength determines damage + carrying capacity
-	private int speed; // Speed determines movement speed
+	protected int hp; // Health Points determine life force
+	protected int str; // Strength determines damage + carrying capacity
+	protected int speed; // Speed determines movement speed
 	
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 
 	public Entity() {}
 	

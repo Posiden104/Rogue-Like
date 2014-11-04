@@ -21,7 +21,7 @@ public class Player extends Sprite {
 			sprites[i] = new TextureRegion(tex, i * 16, 0, 16, 16);
 		}
 		
-		animation.setFrames(sprites, 1 / 2f);
+		animation.setFrames(sprites, 1 / 3f);
 		
 		width = sprites[0].getRegionWidth();
 		height = sprites[0].getRegionHeight();
@@ -30,7 +30,7 @@ public class Player extends Sprite {
 	
 	public void render(SpriteBatch sb) {
 		sb.begin();
-		sb.draw(animation.getFrame(), Game.V_WIDTH / 2, Game.V_HEIGHT / 2);
+		sb.draw(animation.getFrame(), Game.V_WIDTH / 2 - 8, Game.V_HEIGHT / 2);
 		sb.end();
 	}
 
@@ -39,6 +39,23 @@ public class Player extends Sprite {
 		Vector2 ret = new Vector2(entity.getX(), entity.getY());
 	
 		return ret;
+	}
+	
+	public void move(int dir) {
+		switch(dir) {
+		case 0: // north
+			entity.y++;
+			break;
+		case 1: // east
+			entity.x--;
+			break;
+		case 2: // south
+			entity.y--;
+			break;
+		case 3: // west
+			entity.x++;
+			break;
+		}
 	}
 	
 }
