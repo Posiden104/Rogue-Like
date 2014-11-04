@@ -34,10 +34,13 @@ public class Player extends Sprite {
 		sb.end();
 	}
 
-	public Vector2 getOffset() {
-
-		Vector2 ret = new Vector2(entity.getX(), entity.getY());
+	public Vector2 getRenderOffset() {
+		Vector2 ret = new Vector2(entity.getX() - Game.V_WIDTH / 2 - 8, entity.getY() - Game.V_HEIGHT / 2 - 8);
+		return ret;
+	}
 	
+	public Vector2 getActualOffset() {
+		Vector2 ret = new Vector2(entity.getX(), entity.getY());
 		return ret;
 	}
 	

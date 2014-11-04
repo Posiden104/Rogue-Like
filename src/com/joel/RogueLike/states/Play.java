@@ -33,7 +33,7 @@ public class Play extends GameState {
 		boundedCam.setBounds(0, Game.V_WIDTH, 0, Game.V_HEIGHT);
 
 		// create player
-		Entity e = new Entity(100, 200, 200);
+		Entity e = new Entity(0, 0, 200);
 		player = new Player(e);
  
 		// create hud
@@ -69,11 +69,12 @@ public class Play extends GameState {
 	public void render() {
 
 		// camera follow player
-		boundedCam.setPosition(player.getX() + Game.V_WIDTH / 4, Game.V_HEIGHT / 2);
+		boundedCam.setPosition(player.getX() + Game.V_WIDTH / 2, Game.V_HEIGHT / 2);
 		boundedCam.update();
 
 		// render map
 		map.render(sb);
+//		TileSet.stoneFloor.render(sb);
 		
 		// render player
 		sb.setProjectionMatrix(boundedCam.combined);
@@ -90,7 +91,7 @@ public class Play extends GameState {
 	}
 
 	public static Vector2 getPlayerOffset() {
-		return player.getOffset();
+		return player.getRenderOffset();
 	}
 
 	public void dispose() {

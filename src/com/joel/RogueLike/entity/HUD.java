@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.joel.RogueLike.main.Game;
-import com.joel.RogueLike.states.Play;
 
 public class HUD {
 	
 //	private Player player;
 	
-	private TextureRegion[] font;
+	private static TextureRegion[] font;
 	
 	public HUD(Player player) {
 		
@@ -29,20 +28,33 @@ public class HUD {
 		
 	}
 	
+	int[][] array = new int[][] {
+			{0, 1, 2, 3, 4},
+			{0, 1, 2, 3, 4},
+			{0, 1, 2, 3, 4},
+			{0, 1, 2, 3, 4},
+			}; 
+	
+	
 	public void render(SpriteBatch sb) {
 		
 		sb.begin();
 		
 		// draw crystal amount
 //		drawString(sb, player.getNumCrystals() + " / " + player.getTotalCrystals(), 132, 211);
-		drawString(sb, "100 / 100", 132 - Play.getPlayerOffset().x, 211 - Play.getPlayerOffset().y);
+//		drawString(sb, "100 / 100", 16 - Play.getPlayerOffset().x, 16 - Play.getPlayerOffset().y);
 		
+//		for (int i = 0; i < array.length; i++) {
+//			for(int j = 0; j < array[i].length; j++) {
+//				drawString(sb, array[i][j] + "", i * 16 - Play.getPlayerOffset().x, j * 16 - Play.getPlayerOffset().y);
+//			}
+//		}
+//		
 		sb.end();
 		
 	}
 	
-//	@SuppressWarnings("unused")
-	private void drawString(SpriteBatch sb, String s, float x, float y) {
+	public static void drawString(SpriteBatch sb, String s, float x, float y) {
 		for(int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			if(c == '/') c = 10;

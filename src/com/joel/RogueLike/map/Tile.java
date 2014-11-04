@@ -17,12 +17,16 @@ public class Tile extends Sprite{
 	
 	public Tile(TextureRegion tex, int x, int y) {
 //		this.tex = new TextureRegion[] { tex };
+		this.x = tex.getRegionWidth() * x;
+		this.y = tex.getRegionHeight() * y;
 		animation = new Animation();
 		setAnimation(tex, 1 / 2f);
 	}
 	
 	public Tile(TextureRegion[] tex, int x, int y) {
 //		this.tex = tex;
+		this.x = x;
+		this.y = y;
 		animation = new Animation();
 		setAnimation(tex, 1 / 2f);
 	}
@@ -41,7 +45,7 @@ public class Tile extends Sprite{
 	
 	public void render(SpriteBatch sb) {
 		sb.begin();
-		sb.draw(animation.getFrame(), x - Play.getPlayerOffset().x, y - Play.getPlayerOffset().y);
+		sb.draw(animation.getFrame(), x - Play.getPlayerOffset().x, -y - Play.getPlayerOffset().y);
 		sb.end();
 	}
 	
