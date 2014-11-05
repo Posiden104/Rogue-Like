@@ -9,21 +9,23 @@ import com.joel.RogueLike.handlers.GameStateManager;
 import com.joel.RogueLike.handlers.MyInput;
 import com.joel.RogueLike.main.Game;
 import com.joel.RogueLike.map.Map;
+import com.joel.RogueLike.map.TileSet;
 
 public class Play extends GameState {
 
 	private BoundedCamera boundedCam;
-	
-	public static Player player;
-	
-	// private Array<Entity> entities;
-	
-	private HUD hud;
-	
-	public static int level;
 
-	public static Map map;
+	public static Player player;
+
+	// private Array<Entity> entities;
+
+	private HUD hud;
+
+	public static int level;
+	public static boolean debug = false;
 	
+	public static Map map;
+
 	public Play(GameStateManager gsm) {
 		super(gsm);
 
@@ -35,10 +37,10 @@ public class Play extends GameState {
 		// create player
 		Entity e = new Entity(0, 0, 200);
 		player = new Player(e);
- 
+
 		// create hud
 		hud = new HUD(player);
-		
+
 		// create map
 		map = new Map();
 	}
@@ -59,7 +61,10 @@ public class Play extends GameState {
 	}
 
 	public void update(float dt) {
+		// update input
 		handleInput();
+
+		// update player
 		player.update(dt);
 
 		// update the map
@@ -74,7 +79,12 @@ public class Play extends GameState {
 
 		// render map
 		map.render(sb);
-//		TileSet.stoneFloor.render(sb);
+
+		// render tilesets
+		if (debug) {
+			TileSet.stoneFloor.render(sb);
+			TileSet.stoneWall.render(sb);
+		}
 		
 		// render player
 		sb.setProjectionMatrix(boundedCam.combined);

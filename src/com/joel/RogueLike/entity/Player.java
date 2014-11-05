@@ -10,6 +10,7 @@ public class Player extends Sprite {
 	
 	public Entity player;
 	
+	
 	public Player(Entity e) { 
 		super(e);
 
@@ -34,13 +35,17 @@ public class Player extends Sprite {
 		sb.end();
 	}
 
-	public Vector2 getRenderOffset() {
-		Vector2 ret = new Vector2(entity.getX() - Game.V_WIDTH / 2 - 8, entity.getY() - Game.V_HEIGHT / 2 - 8);
+	
+	/*
+	 * Offset for the rest of the game's rendering
+	 */
+	public Vector2 getRenderOffset() { 
+		Vector2 ret = new Vector2(entity.getX() - Game.V_WIDTH / 2 - 8, entity.getY() - Game.V_HEIGHT / 2 - 8); 
 		return ret;
 	}
 	
 	public Vector2 getActualOffset() {
-		Vector2 ret = new Vector2(entity.getX(), entity.getY());
+		Vector2 ret = new Vector2(entity.getX(), entity.getY()); // not sure if this method works correctly
 		return ret;
 	}
 	
