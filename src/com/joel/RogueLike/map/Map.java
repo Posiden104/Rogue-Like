@@ -9,10 +9,10 @@ public class Map {
 
 	public Map() {
 
-//		Room room1 = new Room(5, 5, TileSet.stoneFloor, TileSet.stoneWall);
-//		map = room1.getRoom();
+		Room room1 = new Room(5, 5, TileSet.stoneFloor, TileSet.stoneWall);
+		map = room1.getRoom();
 
-		 testMap();
+//		 testMap();
 	}
 
 	public void update(float dt) {
@@ -54,49 +54,66 @@ public class Map {
 		}
 	}
 
+	public void testMap2() {
+		map = new Tile[2][2]; // Corners only
+		map[0][0] = new Tile(TileSet.stoneFloor.getTile(0, 0), 0, 0); // TL
+		map[0][1] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 1); // TR
+		
+		map[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 1, 0); // BL
+		map[1][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 1); // BR
+	}
+	
 	public void testMap() {
 		map = new Tile[5][5];
 
-		map[0][0] = new Tile(TileSet.stoneFloor.getTile(0, 0), 0, 0);
-		map[0][1] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 1);
-		map[0][2] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 2);
-		map[0][3] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 3);
-		map[0][4] = new Tile(TileSet.stoneFloor.getTile(0, 2), 0, 4);
+		// Corners
+		map[0][0] = new Tile(TileSet.stoneFloor.getTile(0, 0), 0, 0); // TL corner
+		map[0][4] = new Tile(TileSet.stoneFloor.getTile(0, 2), 0, 4); // TR corner
+		map[4][0] = new Tile(TileSet.stoneFloor.getTile(2, 0), 4, 0); // BL corner
+		map[4][4] = new Tile(TileSet.stoneFloor.getTile(2, 2), 4, 4); // BR corner
+		
+		// Walls
+		map[0][1] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 1); //
+		map[0][2] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 2); // Top wall
+		map[0][3] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 3); //
+		
+		map[4][1] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 1); //
+		map[4][2] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 2); // Bottom wall
+		map[4][3] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 3); //
+		
+		map[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 1, 0); //
+		map[2][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 2, 0); // Left wall
+		map[3][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 3, 0); //
+		
+		map[1][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 1, 4); //
+		map[2][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 2, 4); // Right wall
+		map[3][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 3, 4); //
+		
+		// Middle
+		map[1][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 1); //
+		map[1][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 2); // Middle
+		map[1][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 3); //
 
-		map[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 1, 0);
-		map[1][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 1);
-		map[1][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 2);
-		map[1][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 3);
-		map[1][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 1, 4);
+		map[2][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 1); //
+		map[2][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 2); // Middle
+		map[2][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 3); //
 
-		map[2][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 2, 0);
-		map[2][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 1);
-		map[2][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 2);
-		map[2][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 2, 3);
-		map[2][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 2, 4);
+		map[3][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 1); //
+		map[3][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 2); // Middle
+		map[3][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 3); //
 
-		map[3][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 3, 0);
-		map[3][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 1);
-		map[3][2] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 2);
-		map[3][3] = new Tile(TileSet.stoneFloor.getTile(1, 1), 3, 3);
-		map[3][4] = new Tile(TileSet.stoneFloor.getTile(1, 2), 3, 4);
-
-		map[4][0] = new Tile(TileSet.stoneFloor.getTile(2, 0), 4, 0);
-		map[4][1] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 1);
-		map[4][2] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 2);
-		map[4][3] = new Tile(TileSet.stoneFloor.getTile(2, 1), 4, 3);
-		map[4][4] = new Tile(TileSet.stoneFloor.getTile(2, 2), 4, 4);
+		
 
 		walls = new Tile[7][7];
 
 		// Top row
-		walls[0][0] = new Tile(TileSet.stoneWall.getTile(0, 0), -1, -1);
+		walls[0][0] = new Tile(TileSet.stoneWall.getTile(0, 0), -1, -1); // TL corner
 		walls[0][1] = new Tile(TileSet.stoneWall.getTile(0, 1), -1, 0);
 		walls[0][2] = new Tile(TileSet.stoneWall.getTile(0, 1), -1, 1);
 		walls[0][3] = new Tile(TileSet.stoneWall.getTile(0, 1), -1, 2);
 		walls[0][4] = new Tile(TileSet.stoneWall.getTile(0, 1), -1, 3);
 		walls[0][5] = new Tile(TileSet.stoneWall.getTile(0, 1), -1, 4);
-		walls[0][6] = new Tile(TileSet.stoneWall.getTile(0, 2), -1, 5);
+		walls[0][6] = new Tile(TileSet.stoneWall.getTile(0, 2), -1, 5); // TR corner
 
 		// left side
 		walls[1][0] = new Tile(TileSet.stoneWall.getTile(1, 0), 0, -1);
@@ -113,13 +130,13 @@ public class Map {
 		walls[5][6] = new Tile(TileSet.stoneWall.getTile(1, 0), 4, 5);
 
 		// bottom row
-		walls[6][0] = new Tile(TileSet.stoneWall.getTile(2, 0), 5, -1);
+		walls[6][0] = new Tile(TileSet.stoneWall.getTile(2, 0), 5, -1); // BL corner
 		walls[6][1] = new Tile(TileSet.stoneWall.getTile(0, 1), 5, 0);
 		walls[6][2] = new Tile(TileSet.stoneWall.getTile(0, 1), 5, 1);
 		walls[6][3] = new Tile(TileSet.stoneWall.getTile(0, 1), 5, 2);
 		walls[6][4] = new Tile(TileSet.stoneWall.getTile(0, 1), 5, 3);
 		walls[6][5] = new Tile(TileSet.stoneWall.getTile(0, 1), 5, 4);
-		walls[6][6] = new Tile(TileSet.stoneWall.getTile(2, 2), 5, 5);
+		walls[6][6] = new Tile(TileSet.stoneWall.getTile(2, 2), 5, 5); // BR corner
 
 	}
 

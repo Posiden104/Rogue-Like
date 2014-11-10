@@ -16,16 +16,16 @@ public class Entity {
 
 	public Entity(int x, int y, int hp) {
 		this.hp = hp;
-		this.x = x;
-		this.y = y;
+		this.x = x * 16;
+		this.y = y * 16;
 	}
 
 	public Entity(int x, int y, int hp, int str, int speed) {
 		this.hp = hp;
 		this.str = str;
 		this.speed = speed;
-		this.x = x;
-		this.y = y;
+		this.x = x * 16;
+		this.y = y * 16;
 	}
 
 	public void render(SpriteBatch sb) {

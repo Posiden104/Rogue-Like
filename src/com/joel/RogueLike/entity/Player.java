@@ -40,30 +40,39 @@ public class Player extends Sprite {
 	 * Offset for the rest of the game's rendering
 	 */
 	public Vector2 getRenderOffset() { 
-		Vector2 ret = new Vector2(entity.getX() - Game.V_WIDTH / 2 - 8, entity.getY() - Game.V_HEIGHT / 2 - 8); 
+		Vector2 ret = new Vector2(player.getX() - Game.V_WIDTH / 2 + 8, player.getY() - Game.V_HEIGHT / 2 + 8); 
 		return ret;
 	}
 	
 	public Vector2 getActualOffset() {
-		Vector2 ret = new Vector2(entity.getX(), entity.getY()); // not sure if this method works correctly
+		Vector2 ret = new Vector2(player.getX(), player.getY()); // not sure if this method works correctly
 		return ret;
 	}
 	
 	public void move(int dir) {
 		switch(dir) {
 		case 0: // north
-			entity.y += 16;
+			player.y += 16;
+			printCords();
 			break;
 		case 1: // east
-			entity.x -= 16;
+			player.x -= 16;
+			printCords();
 			break;
 		case 2: // south
-			entity.y -= 16;
+			player.y -= 16;
+			printCords();
 			break;
 		case 3: // west
-			entity.x += 16;
+			player.x += 16;
+			printCords();
 			break;
 		}
+		
 	}
-	
+
+	public void printCords() {
+//		System.out.printf("x: %f, y: %f\n", getRenderOffset().x, getRenderOffset().y );
+		System.out.printf("x %f, y %f\n", (float) player.x, (float) player.y);
+		}
 }

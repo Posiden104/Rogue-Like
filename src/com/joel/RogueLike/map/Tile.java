@@ -33,7 +33,7 @@ public class Tile extends Sprite {
 			this.y = 17 * x;
 		} else {
 			this.x = tex[0].getRegionWidth() * y; // swap x and y for 
-			this.y = tex[0].getRegionHeight() * x; // ease of rendering
+			this.y = -tex[0].getRegionHeight() * x; // ease of rendering
 		}
 		
 		animation = new Animation();

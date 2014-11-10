@@ -35,7 +35,7 @@ public class Play extends GameState {
 		boundedCam.setBounds(0, Game.V_WIDTH, 0, Game.V_HEIGHT);
 
 		// create player
-		Entity e = new Entity(0, 0, 200);
+		Entity e = new Entity(2, -2, 200);
 		player = new Player(e);
 
 		// create hud
@@ -46,16 +46,16 @@ public class Play extends GameState {
 	}
 
 	public void handleInput() {
-		if (MyInput.isDown(MyInput.KEY_UP) && (MyInput.isPressed(MyInput.KEY_UP))) {
+		if (MyInput.isDown(MyInput.KEY_UP) && (MyInput.isPressed(MyInput.KEY_UP))) { // north
 			player.move(0);
 		}
-		if (MyInput.isDown(MyInput.KEY_LEFT) && (MyInput.isPressed(MyInput.KEY_LEFT))) {
+		if (MyInput.isDown(MyInput.KEY_LEFT) && (MyInput.isPressed(MyInput.KEY_LEFT))) { // east
 			player.move(1);
 		}
-		if (MyInput.isDown(MyInput.KEY_DOWN) && (MyInput.isPressed(MyInput.KEY_DOWN))) {
+		if (MyInput.isDown(MyInput.KEY_DOWN) && (MyInput.isPressed(MyInput.KEY_DOWN))) { // south
 			player.move(2);
 		}
-		if (MyInput.isDown(MyInput.KEY_RIGHT) && (MyInput.isPressed(MyInput.KEY_RIGHT))) {
+		if (MyInput.isDown(MyInput.KEY_RIGHT) && (MyInput.isPressed(MyInput.KEY_RIGHT))) { // west
 			player.move(3);
 		}
 	}
