@@ -11,6 +11,7 @@ Added a map package with Map, Tile, and TileSet classes.
 
 * [ ] Map Generator
 	* [X] fix the room generator
+	* [ ] add wall generation
 	* [ ] create method to load room to a specific location on map
 	* [ ] create hall generator
 	* [ ] create map generator 
