@@ -53,19 +53,19 @@ public class Player extends Sprite {
 		switch(dir) {
 		case 0: // north
 			player.y += 16;
-			printCords();
+//			printCords();
 			break;
 		case 1: // east
 			player.x -= 16;
-			printCords();
+//			printCords();
 			break;
 		case 2: // south
 			player.y -= 16;
-			printCords();
+//			printCords();
 			break;
 		case 3: // west
 			player.x += 16;
-			printCords();
+//			printCords();
 			break;
 		}
 		
