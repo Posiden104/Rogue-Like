@@ -10,7 +10,8 @@ Added a map package with Map, Tile, and TileSet classes.
 **TODO**:
 
 * [ ] Map Generator
-	* [X] fix the room generator
+	* [X] ~~fix the room generator~~
+	* [X] add support for rectangular rooms
 	* [ ] create method to load room to a specific location on map
 	* [ ] create hall generator
 	* [ ] create map generator 
