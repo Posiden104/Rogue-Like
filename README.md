@@ -12,6 +12,13 @@ Added a map package with Map, Tile, and TileSet classes.
 * [ ] Map Generator 
 	* [X] ~~fix the room generator~~
 	* [X] add support for rectangular rooms
-	* [ ] create method to load room to a specific location on map
+	* [X] create method to load room to a specific location on map
+	* [X] *Bonus* added seed support for maps
+	* [X] added the enum to store which face the wall piece is on (N, S, E, W, Middle, Corner)
+	* [ ] add method to determine where to place new room
 	* [ ] create hall generator
 	* [ ] create map generator 
+
+* [ ] View Mechanics
+	* [ ] implement visible in Tile
+	* [ ] implement solid in Tile (cannot see through solid tiles)

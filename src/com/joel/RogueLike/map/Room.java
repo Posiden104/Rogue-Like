@@ -2,6 +2,7 @@ package com.joel.RogueLike.map;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.joel.RogueLike.map.Tile.Position;
 
 public class Room {
 
@@ -9,6 +10,7 @@ public class Room {
 	private int h;
 	private int vert; // room.length
 	private int horz; // room[0].length
+	private int roomNum;
 
 	private Tile[][] room;
 	private Tile[][] wall;
@@ -17,17 +19,19 @@ public class Room {
 
 	private OrthographicCamera roomCam;
 
-	public Room(int w, int h, TileSet floor, TileSet walls) {
+	public Room(int w, int h, TileSet floor, TileSet walls, int num) {
 		roomCam = new OrthographicCamera();
 
 		room = new Tile[h][w];
 		wall = new Tile[h + 2][w + 2];
 
+		this.roomNum = num;
+		
 		this.floor = floor;
 		this.walls = walls;
 
-		vert = h;
-		horz = w;
+		vert = this.h = h;
+		horz = this.w = w;
 
 		buildRoom();
 		buildWalls(vert + 2, horz + 2);
@@ -38,6 +42,13 @@ public class Room {
 		buildCorners();
 		buildEdges();
 		fillMiddle();
+		
+		for(Tile[] t : room) {
+			for(Tile t2 : t) {
+				t2.setSolid(false);
+				t2.setPosition(Position.MIDDLE);
+			}
+		}
 
 	}
 
@@ -45,25 +56,43 @@ public class Room {
 		// Corners
 		// TL corner
 		wall[0][0] = new Tile(walls.getTile(0, 0), -1, -1);
+		wall[0][0].setPosition(Position.CORNER);
+
 		// TR corner
 		wall[0][horz- 1] = new Tile(walls.getTile(0, 2), -1, horz - 2);
+		wall[0][horz- 1].setPosition(Position.CORNER);
+		
 		// BL corner
 		wall[vert - 1][0] = new Tile(walls.getTile(2, 0), vert - 2, -1);
+		wall[vert - 1][0].setPosition(Position.CORNER);
+		
 		// BR corner
 		wall[vert - 1][horz - 1] = new Tile(walls.getTile(2, 2), vert - 2, horz - 2);
+		wall[vert - 1][horz - 1].setPosition(Position.CORNER);
 
 		// Horizontal sides
 		for (int i = 1; i < horz - 1; i++) {
 			wall[0][i] = new Tile(walls.getTile(0, 1), -1, i - 1); // Top
+			wall[0][i].setPosition(Position.NORTH);
+		
 			wall[vert - 1][i] = new Tile(walls.getTile(0, 1), vert - 2, i - 1); // Bottom
+			wall[vert - 1][i].setPosition(Position.SOUTH);
 		}
 
 		// Vertical sides
 		for (int i = 1; i < vert - 1; i++) {
 			wall[i][0] = new Tile(walls.getTile(1, 0), i - 1, -1); // Left
+			wall[i][0].setPosition(Position.WEST);
+			
 			wall[i][horz - 1] = new Tile(walls.getTile(1, 0), i - 1, horz - 2); // Right
+			wall[i][horz - 1].setPosition(Position.EAST);
 		}
-
+		
+		for(Tile[] t : wall) {
+			for(Tile t2 : t) {
+				t2.setSolid(true);
+			}
+		}
 	}
 
 	private void buildCorners() {
@@ -129,6 +158,10 @@ public class Room {
 
 	public int getHeight() {
 		return h;
+	}
+	
+	public int getRoomNumber() {
+		return roomNum;
 	}
 
 }
