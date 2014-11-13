@@ -1,7 +1,5 @@
 package com.joel.RogueLike.map;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.joel.RogueLike.map.Tile.Position;
 
 public class Room {
@@ -17,16 +15,12 @@ public class Room {
 	private TileSet floor;
 	private TileSet walls;
 
-	private OrthographicCamera roomCam;
-
 	public Room(int w, int h, TileSet floor, TileSet walls, int num) {
-		roomCam = new OrthographicCamera();
-
 		room = new Tile[h][w];
 		wall = new Tile[h + 2][w + 2];
 
 		this.roomNum = num;
-		
+
 		this.floor = floor;
 		this.walls = walls;
 
@@ -42,9 +36,9 @@ public class Room {
 		buildCorners();
 		buildEdges();
 		fillMiddle();
-		
-		for(Tile[] t : room) {
-			for(Tile t2 : t) {
+
+		for (Tile[] t : room) {
+			for (Tile t2 : t) {
 				t2.setSolid(false);
 				t2.setPosition(Position.MIDDLE);
 			}
@@ -59,13 +53,13 @@ public class Room {
 		wall[0][0].setPosition(Position.CORNER);
 
 		// TR corner
-		wall[0][horz- 1] = new Tile(walls.getTile(0, 2), -1, horz - 2);
-		wall[0][horz- 1].setPosition(Position.CORNER);
-		
+		wall[0][horz - 1] = new Tile(walls.getTile(0, 2), -1, horz - 2);
+		wall[0][horz - 1].setPosition(Position.CORNER);
+
 		// BL corner
 		wall[vert - 1][0] = new Tile(walls.getTile(2, 0), vert - 2, -1);
 		wall[vert - 1][0].setPosition(Position.CORNER);
-		
+
 		// BR corner
 		wall[vert - 1][horz - 1] = new Tile(walls.getTile(2, 2), vert - 2, horz - 2);
 		wall[vert - 1][horz - 1].setPosition(Position.CORNER);
@@ -74,7 +68,7 @@ public class Room {
 		for (int i = 1; i < horz - 1; i++) {
 			wall[0][i] = new Tile(walls.getTile(0, 1), -1, i - 1); // Top
 			wall[0][i].setPosition(Position.NORTH);
-		
+
 			wall[vert - 1][i] = new Tile(walls.getTile(0, 1), vert - 2, i - 1); // Bottom
 			wall[vert - 1][i].setPosition(Position.SOUTH);
 		}
@@ -83,14 +77,15 @@ public class Room {
 		for (int i = 1; i < vert - 1; i++) {
 			wall[i][0] = new Tile(walls.getTile(1, 0), i - 1, -1); // Left
 			wall[i][0].setPosition(Position.WEST);
-			
+
 			wall[i][horz - 1] = new Tile(walls.getTile(1, 0), i - 1, horz - 2); // Right
 			wall[i][horz - 1].setPosition(Position.EAST);
 		}
-		
-		for(Tile[] t : wall) {
-			for(Tile t2 : t) {
-				t2.setSolid(true);
+
+		for (Tile[] t : wall) {
+			for (Tile t2 : t) {
+				if (t2 != null)
+					t2.setSolid(true);
 			}
 		}
 	}
@@ -112,7 +107,7 @@ public class Room {
 	private void buildEdges() {
 		// horizontal edges
 		for (int i = 1; i < vert - 1; i++) {
-			room[i][0] = new Tile(floor.getTile(1, 0), i ,0); // top edge
+			room[i][0] = new Tile(floor.getTile(1, 0), i, 0); // top edge
 			// bottom edge
 			room[i][horz - 1] = new Tile(floor.getTile(1, 2), i, horz - 1);
 		}
@@ -136,14 +131,6 @@ public class Room {
 
 	}
 
-	public void render(SpriteBatch sb) {
-
-		sb.setTransformMatrix(roomCam.combined);
-
-		sb.begin();
-		sb.end();
-	}
-
 	public Tile[][] getRoom() {
 		return room;
 	}
@@ -159,7 +146,7 @@ public class Room {
 	public int getHeight() {
 		return h;
 	}
-	
+
 	public int getRoomNumber() {
 		return roomNum;
 	}

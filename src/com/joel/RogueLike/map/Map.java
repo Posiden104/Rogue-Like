@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Map {
 
+	private boolean roomLoaded = false;
+
 	public Tile[][] map; // array of tiles for map
 	public Tile[][] walls;
 
@@ -19,23 +21,35 @@ public class Map {
 		map = room1.getRoom();
 		walls = room1.getWalls();
 
-		rand = new Random();
+		rand = new Random(0L);
 		// testMap();
 	}
 
 	public Map(int w, int h, long seed) {
 		map = new Tile[h][w];
+		rand = new Random(seed);
 
-		generateMap(seed);
+		// generateMap();
+		// testMap();
+		hall();
 	}
 
-	public void generateMap(long seed) {
+	public void generateMap() {
 		// Room size: 5 - 10
 		for (int i = 0; i < 30; i++) {
 			Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i);
+			if (!roomLoaded) {
+				loadRoom(r, map, 1, 1);
+				continue;
+			}
+
 			Vector2 loc = pickLocation();
+			if (loc == null) {
+				continue;
+			}
 			// 5 to 95
-			loadRoom(r, (int) loc.x, (int) loc.y);
+			loadRoom(r, map, (int) loc.x, (int) loc.y);
+
 		}
 
 	}
@@ -43,12 +57,22 @@ public class Map {
 	public Vector2 pickLocation() {
 		int x;
 		int y;
-		
+
+		int count = 0;
+		boolean cont = true;
+
 		do {
 			x = rand.nextInt(map.length);
 			y = rand.nextInt(map[0].length);
-		} while (!map[y][x].isSolid());
-		
+			count++;
+			if (map[y][x] != null && map[y][x].isSolid()) {
+				map[y][x] = new Tile(TileSet.stoneWall.getTile(0, 2), y, x);
+				cont = false;
+			}
+			if (cont && count >= 100)
+				return null;
+		} while (cont);
+
 		return new Vector2(x, y);
 	}
 
@@ -94,7 +118,7 @@ public class Map {
 		TileSet.stoneWall.render(sb);
 	}
 
-	public void loadRoom(Room r, int x, int y) {
+	public void loadRoom(Room r, Tile[][] map, int x, int y) {
 		// Used to buffer the room
 		Tile[][] bufferMap = new Tile[map.length][map[0].length];
 		// Load the floor
@@ -114,7 +138,7 @@ public class Map {
 			}
 		}
 
-		bufferMap(bufferMap);
+		Tile[][] bufferWall = new Tile[map.length][map[0].length];
 
 		// Load the walls
 		Tile[][] wall = r.getWalls();
@@ -123,14 +147,35 @@ public class Map {
 				if (wall[i][j] != null) {
 					int yp = y - 1 + i;
 					int xp = x - 1 + j;
-					map[yp][xp] = wall[i][j];
-					map[yp][xp].setSolid(true);
+
+					if (yp >= map.length) {
+						loadRoom(r, map, x, y - 1);
+						return;
+					} else if (yp < 0) {
+						loadRoom(r, map, x, y + 1);
+						return;
+					} else if (xp >= map[yp].length) {
+						loadRoom(r, map, x - 1, y);
+						return;
+					} else if (xp < 0) {
+						loadRoom(r, map, x + 1, y);
+						return;
+					}
+
+					bufferWall[yp][xp] = wall[i][j];
+					bufferWall[yp][xp].setSolid(true);
 				}
 			}
 		}
+
+		bufferMap(bufferMap);
+		bufferMap(bufferWall);
+		roomLoaded = true;
+
 		System.out.printf("Room %d loaded\n", r.getRoomNumber());
 	}
 
+	
 	public void bufferMap(Tile[][] bMap) {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
@@ -142,13 +187,9 @@ public class Map {
 		}
 	}
 
-	public void testMap2() {
-		map = new Tile[2][2]; // Corners only
-		map[0][0] = new Tile(TileSet.stoneFloor.getTile(0, 0), 0, 0); // TL
-		map[0][1] = new Tile(TileSet.stoneFloor.getTile(0, 1), 0, 1); // TR
-
-		map[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 0), 1, 0); // BL
-		map[1][1] = new Tile(TileSet.stoneFloor.getTile(1, 1), 1, 1); // BR
+	public void hall() {
+		// Hall h = new Hall(2, 10, TileSet.stoneFloor, TileSet.stoneWall,
+		// true);
 	}
 
 	public void testMap() {
