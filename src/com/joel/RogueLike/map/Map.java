@@ -39,7 +39,7 @@ public class Map {
 		for (int i = 0; i < 30; i++) {
 			Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i);
 			if (!roomLoaded) {
-				loadRoom(r, map, 1, 1);
+				loadRoom(r, map, 1, 1, true);
 				continue;
 			}
 
@@ -48,7 +48,7 @@ public class Map {
 				continue;
 			}
 			// 5 to 95
-			loadRoom(r, map, (int) loc.x, (int) loc.y);
+			loadRoom(r, map, (int) loc.x, (int) loc.y, true);
 
 		}
 
@@ -118,7 +118,7 @@ public class Map {
 		TileSet.stoneWall.render(sb);
 	}
 
-	public void loadRoom(Room r, Tile[][] map, int x, int y) {
+	public void loadRoom(Room r, Tile[][] map, int x, int y, boolean isRoom) {
 		// Used to buffer the room
 		Tile[][] bufferMap = new Tile[map.length][map[0].length];
 		// Load the floor
@@ -138,44 +138,45 @@ public class Map {
 			}
 		}
 
-		Tile[][] bufferWall = new Tile[map.length][map[0].length];
+		if (isRoom) {
+			Tile[][] bufferWall = new Tile[map.length][map[0].length];
 
-		// Load the walls
-		Tile[][] wall = r.getWalls();
-		for (int i = 0; i < r.getHeight() + 2; i++) {
-			for (int j = 0; j < r.getWidth() + 2; j++) {
-				if (wall[i][j] != null) {
-					int yp = y - 1 + i;
-					int xp = x - 1 + j;
+			// Load the walls
+			Tile[][] wall = r.getWalls();
+			for (int i = 0; i < r.getHeight() + 2; i++) {
+				for (int j = 0; j < r.getWidth() + 2; j++) {
+					if (wall[i][j] != null) {
+						int yp = y - 1 + i;
+						int xp = x - 1 + j;
 
-					if (yp >= map.length) {
-						loadRoom(r, map, x, y - 1);
-						return;
-					} else if (yp < 0) {
-						loadRoom(r, map, x, y + 1);
-						return;
-					} else if (xp >= map[yp].length) {
-						loadRoom(r, map, x - 1, y);
-						return;
-					} else if (xp < 0) {
-						loadRoom(r, map, x + 1, y);
-						return;
+						if (yp >= map.length) {
+							loadRoom(r, map, x, y - 1, true);
+							return;
+						} else if (yp < 0) {
+							loadRoom(r, map, x, y + 1, true);
+							return;
+						} else if (xp >= map[yp].length) {
+							loadRoom(r, map, x - 1, y, true);
+							return;
+						} else if (xp < 0) {
+							loadRoom(r, map, x + 1, y, true);
+							return;
+						}
+
+						bufferWall[yp][xp] = wall[i][j];
+						bufferWall[yp][xp].setSolid(true);
 					}
-
-					bufferWall[yp][xp] = wall[i][j];
-					bufferWall[yp][xp].setSolid(true);
 				}
 			}
+			bufferMap(bufferWall);
 		}
 
 		bufferMap(bufferMap);
-		bufferMap(bufferWall);
 		roomLoaded = true;
 
 		System.out.printf("Room %d loaded\n", r.getRoomNumber());
 	}
 
-	
 	public void bufferMap(Tile[][] bMap) {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
@@ -187,9 +188,34 @@ public class Map {
 		}
 	}
 
+	public void loadHall(Hall h, Tile[][] map, int x, int y) {
+		// Used to buffer the hall
+		Tile[][] bufferMap = new Tile[map.length][map[0].length];
+
+		Tile[][] hall = h.getHall();
+		
+		// Load the floor
+		for (int i = y; i < h.getHeight() + y; i++) {
+			for (int j = x; j < h.getWidth() + x; j++) {
+				if (i >= map.length || i < 0)
+					return;
+				else if (j >= map[i].length || j < 0)
+					return;
+
+				if (map[i][j] == null) {
+					bufferMap[i][j] = hall[i - y][j - x];
+				} else {
+					return;
+				}
+			}
+		}
+		
+		bufferMap(bufferMap);
+	}
+
 	public void hall() {
-		// Hall h = new Hall(2, 10, TileSet.stoneFloor, TileSet.stoneWall,
-		// true);
+		Hall h = new Hall(10, TileSet.stoneFloor, TileSet.stoneWall, false);
+		loadHall(h, map, 1, 1);
 	}
 
 	public void testMap() {
