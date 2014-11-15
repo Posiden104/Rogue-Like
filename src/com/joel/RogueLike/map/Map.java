@@ -29,9 +29,9 @@ public class Map {
 		map = new Tile[h][w];
 		rand = new Random(seed);
 
-		// generateMap();
+		 generateMap();
 		// testMap();
-		hall();
+//		hall();
 	}
 
 	public void generateMap() {
@@ -43,12 +43,13 @@ public class Map {
 				continue;
 			}
 
-			Vector2 loc = pickLocation();
-			if (loc == null) {
-				continue;
-			}
+//			Vector2 loc = pickLocation();
+//			if (loc == null) {
+//				continue;
+//			}
 			// 5 to 95
-			loadRoom(r, map, (int) loc.x, (int) loc.y, true);
+//			loadRoom(r, map, (int) loc.x, (int) loc.y, true);
+			loadRoom(r, map, rand.nextInt(91) + 5, rand.nextInt(91) + 5, true);
 
 		}
 
