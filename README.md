@@ -17,7 +17,9 @@ Added a map package with Map, Tile, and TileSet classes.
 	* [X] added the enum to store which face the wall piece is on (N, S, E, W, Middle, Corner)
 	* [X] add method to determine where to place new room
 	* [X] create hall generator
-	* [ ] add method to detect wall intersections and adjust sprite
+	* [X] create method to chain rooms ~~and halls~~ together
+	* [ ] add method to detect wall intersections 
+	* [ ] add method to adjust sprite for wall intersections
 	* [ ] create map generator 
 
 * [ ] View Mechanics

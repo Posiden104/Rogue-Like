@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.joel.RogueLike.map.Tile.Position;
 
 public class Map {
 
@@ -29,27 +30,58 @@ public class Map {
 		map = new Tile[h][w];
 		rand = new Random(seed);
 
-		 generateMap();
+		generateMap();
 		// testMap();
-//		hall();
+		// hall();
 	}
 
 	public void generateMap() {
+		Random random = new Random(10L);
 		// Room size: 5 - 10
 		for (int i = 0; i < 30; i++) {
 			Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i);
+//			Hall h = new Hall(rand.nextInt(15) + 5, TileSet.stoneFloor, TileSet.stoneWall, rand.nextBoolean());
+
 			if (!roomLoaded) {
 				loadRoom(r, map, 1, 1, true);
 				continue;
 			}
 
-//			Vector2 loc = pickLocation();
-//			if (loc == null) {
-//				continue;
-//			}
+			Vector2 loc = pickLocation();
+			if (loc == null) {
+				continue;
+			}
+			switch(map[(int) loc.y][(int) loc.x].getPos()) {
+			case NORTH:
+				loc.y += r.getHeight();
+				loc.x -= random.nextInt(r.getWidth());
+				break;
+			case SOUTH:
+				loc.y -= 1;
+				loc.x -= random.nextInt(r.getWidth());
+				break;
+			case EAST:
+				loc.x += 1;
+				loc.y += random.nextInt(r.getHeight());
+				break;
+			case WEST:
+				loc.x -= r.getWidth();
+				loc.y += random.nextInt(r.getHeight());
+				break;
+			case CORNER:
+				continue;
+			case MIDDLE:
+				continue;
+			default:
+				continue;
+			
+			}
+			
+			loadRoom(r, map, (int) loc.x, (int) loc.y, true);
+
 			// 5 to 95
-//			loadRoom(r, map, (int) loc.x, (int) loc.y, true);
-			loadRoom(r, map, rand.nextInt(91) + 5, rand.nextInt(91) + 5, true);
+			// loadRoom(r, map, rand.nextInt(91) + 5, rand.nextInt(91) + 5,
+			// true);
 
 		}
 
@@ -66,8 +98,8 @@ public class Map {
 			x = rand.nextInt(map.length);
 			y = rand.nextInt(map[0].length);
 			count++;
-			if (map[y][x] != null && map[y][x].isSolid()) {
-				map[y][x] = new Tile(TileSet.stoneWall.getTile(0, 2), y, x);
+			Tile t = map[y][x];
+			if (t != null && t.isSolid() && t.getPos() != Position.CORNER && t.getPos() != Position.MIDDLE) {
 				cont = false;
 			}
 			if (cont && count >= 100)
@@ -194,7 +226,7 @@ public class Map {
 		Tile[][] bufferMap = new Tile[map.length][map[0].length];
 
 		Tile[][] hall = h.getHall();
-		
+
 		// Load the floor
 		for (int i = y; i < h.getHeight() + y; i++) {
 			for (int j = x; j < h.getWidth() + x; j++) {
@@ -210,13 +242,8 @@ public class Map {
 				}
 			}
 		}
-		
-		bufferMap(bufferMap);
-	}
 
-	public void hall() {
-		Hall h = new Hall(10, TileSet.stoneFloor, TileSet.stoneWall, false);
-		loadHall(h, map, 1, 1);
+		bufferMap(bufferMap);
 	}
 
 	public void testMap() {
