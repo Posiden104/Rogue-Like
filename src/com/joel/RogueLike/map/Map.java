@@ -11,7 +11,6 @@ public class Map {
 	private boolean roomLoaded = false;
 
 	public Tile[][] map; // array of tiles for map
-	public Tile[][] walls;
 
 	// random # = random.nextInt(max - minimum + 1) + minimum
 	Random rand;
@@ -22,7 +21,6 @@ public class Map {
 
 		Room room1 = new Room(8, 6, TileSet.stoneFloor, TileSet.stoneWall, 0);
 		map = room1.getRoom();
-		walls = room1.getWalls();
 
 		rand = new Random(0L);
 		// testMap();
@@ -32,8 +30,11 @@ public class Map {
 		map = new Tile[h][w];
 		rand = new Random(seed);
 
-		generateMap();
+		// generateMap();
 		// hall();
+
+		Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
+		loadRoom(r, 0, 0);
 	}
 
 	public void generateMap() {
@@ -47,13 +48,15 @@ public class Map {
 				r = new Room();
 				isHall = true;
 			} else { // for Rooms size: 5 - 10
+			// r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
+			// TileSet.stoneFloor, TileSet.stoneWall, i);
 				r = new Room();
 				isHall = true;
 			}
 
 			if (!roomLoaded) {
 				r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i);
-				loadRoom(r, 1, 1);
+				loadRoom(r, 0, 0);
 				continue;
 			}
 
@@ -161,34 +164,19 @@ public class Map {
 				}
 			}
 		}
-
-		if (walls != null) {
-			for (Tile[] t : walls) {
-				for (Tile t2 : t) {
-					if (t2 != null)
-						t2.update(dt);
-				}
-			}
-		}
 	}
 
 	public void render(SpriteBatch sb) {
 		if (map != null) {
 			for (int i = 0; i < map.length; i++) {
 				for (int j = 0; j < map[i].length; j++) {
-					if (map[i][j] != null)
+					if (map[i][j] != null) {
 						map[i][j].render(sb, i, j);
+						// System.out.println(map[i][j].isSolid());
+					}
 				}
 			}
-		}
-
-		if (walls != null) {
-			for (int i = 0; i < walls.length; i++) {
-				for (int j = 0; j < walls[i].length; j++) {
-					if (walls[i][j] != null)
-						walls[i][j].render(sb, i - 1, j - 1);
-				}
-			}
+			// System.out.println("_______________");
 		}
 	}
 
@@ -197,60 +185,25 @@ public class Map {
 		Tile[][] bufferMap = new Tile[map.length][map[0].length];
 		// Load the floor
 		Tile[][] room = r.getRoom();
+
+		if (y + r.getHeight() >= map.length || y < 0)
+			return;
+		else if (x + r.getWidth() >= map[0].length || x < 0)
+			return;
+
 		for (int i = y; i < r.getHeight() + y; i++) {
 			for (int j = x; j < r.getWidth() + x; j++) {
-				if (i >= map.length || i < 0)
-					return;
-				else if (j >= map[i].length || j < 0)
-					return;
-
 				if (map[i][j] == null) {
-					try {
-						bufferMap[i][j] = room[i - y][j - x];
-					} catch (NullPointerException e) {
-						System.out.println(room);
-						System.out.printf("i: %d, j: %d\ny: %d, x: %d\n", i, j, x, y);
-						e.printStackTrace();
-						System.exit(1);
-					}
+					bufferMap[i][j] = room[i - y][j - x];
 				} else {
 					return;
 				}
 			}
 		}
 
-			Tile[][] bufferWall = new Tile[map.length][map[0].length];
-
-			// Load the walls
-			Tile[][] wall = r.getWalls();
-			for (int i = 0; i < r.getHeight() + 2; i++) {
-				for (int j = 0; j < r.getWidth() + 2; j++) {
-					if (wall[i][j] != null) {
-						int yp = y - 1 + i;
-						int xp = x - 1 + j;
-
-						if (yp >= map.length) {
-							loadRoom(r, x, y - 1);
-							return;
-						} else if (yp < 0) {
-							loadRoom(r, x, y + 1);
-							return;
-						} else if (xp >= map[yp].length) {
-							loadRoom(r, x - 1, y);
-							return;
-						} else if (xp < 0) {
-							loadRoom(r, x + 1, y);
-							return;
-						}
-
-						bufferWall[yp][xp] = wall[i][j];
-						bufferWall[yp][xp].setSolid(true);
-					}
-				}
-			}
-			bufferMap(bufferWall);
-
 		bufferMap(bufferMap);
+		bufferMap = new Tile[map.length][map[0].length];
+
 		roomLoaded = true;
 		loadHall = true;
 
@@ -267,6 +220,8 @@ public class Map {
 				}
 			}
 		}
+
+		bMap = new Tile[map.length][map[0].length];
 	}
 
 	public Vector2 loadHall(Hall h, Tile[][] map, int x, int y) {
@@ -286,7 +241,7 @@ public class Map {
 					bufferMap = null;
 					return null;
 				}
-				if (map[i][j] == null) {
+				if (map[i][j] == null || (map[i][j].isSolid() && hall[i - y][j - x].isSolid())) {
 					bufferMap[i][j] = hall[i - y][j - x];
 				} else {
 					bufferMap = null;
@@ -298,9 +253,12 @@ public class Map {
 		ret = new Vector2(h.getEndPt().y + x, h.getEndPt().x + y);
 
 		bufferMap(bufferMap);
+		bufferMap = new Tile[map.length][map[0].length];
 
-		Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
-		loadRoom(r, (int) ret.x, (int) ret.y);
+		// Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
+		// TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
+		// loadRoom(r, (int) ret.x, (int) ret.y);
+		// loadHall = true;
 
 		loadHall = false;
 
@@ -356,42 +314,42 @@ public class Map {
 		map[3][2] = new Tile(TileSet.stoneFloor.getTile(1, 1)); // Middle
 		map[3][3] = new Tile(TileSet.stoneFloor.getTile(1, 1)); //
 
-		// Walls
-		walls = new Tile[7][7];
-
-		// corners
-		walls[0][0] = new Tile(TileSet.stoneWall.getTile(0, 0)); // TL
-		walls[0][6] = new Tile(TileSet.stoneWall.getTile(0, 2)); // TR
-		walls[6][0] = new Tile(TileSet.stoneWall.getTile(2, 0)); // BL
-		walls[6][6] = new Tile(TileSet.stoneWall.getTile(2, 2)); // BR
-
-		// Top row
-		walls[0][1] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[0][2] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[0][3] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[0][4] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[0][5] = new Tile(TileSet.stoneWall.getTile(0, 1));
-
-		// bottom row
-		walls[6][1] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[6][2] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[6][3] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[6][4] = new Tile(TileSet.stoneWall.getTile(0, 1));
-		walls[6][5] = new Tile(TileSet.stoneWall.getTile(0, 1));
-
-		// left side
-		walls[1][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[2][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[3][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[4][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[5][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
-
-		// right side
-		walls[1][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[2][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[3][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[4][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
-		walls[5][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// // Walls
+		// walls = new Tile[7][7];
+		//
+		// // corners
+		// walls[0][0] = new Tile(TileSet.stoneWall.getTile(0, 0)); // TL
+		// walls[0][6] = new Tile(TileSet.stoneWall.getTile(0, 2)); // TR
+		// walls[6][0] = new Tile(TileSet.stoneWall.getTile(2, 0)); // BL
+		// walls[6][6] = new Tile(TileSet.stoneWall.getTile(2, 2)); // BR
+		//
+		// // Top row
+		// walls[0][1] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[0][2] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[0][3] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[0][4] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[0][5] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		//
+		// // bottom row
+		// walls[6][1] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[6][2] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[6][3] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[6][4] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		// walls[6][5] = new Tile(TileSet.stoneWall.getTile(0, 1));
+		//
+		// // left side
+		// walls[1][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[2][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[3][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[4][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[5][0] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		//
+		// // right side
+		// walls[1][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[2][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[3][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[4][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
+		// walls[5][6] = new Tile(TileSet.stoneWall.getTile(1, 0));
 
 	}
 

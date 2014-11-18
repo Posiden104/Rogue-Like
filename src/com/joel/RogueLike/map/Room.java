@@ -11,17 +11,19 @@ public class Room {
 	private int roomNum;
 
 	private Tile[][] room;
+	private Tile[][] floor;
 	private Tile[][] wall;
-	private TileSet floor;
+	private TileSet floors;
 	private TileSet walls;
 
-	public Room(int w, int h, TileSet floor, TileSet walls, int num) {
-		room = new Tile[h][w];
+	public Room(int w, int h, TileSet floors, TileSet walls, int num) {
+		floor = new Tile[h][w];
 		wall = new Tile[h + 2][w + 2];
+		room = new Tile[h + 2][w + 2];
 
 		this.roomNum = num;
 
-		this.floor = floor;
+		this.floors = floors;
 		this.walls = walls;
 
 		vert = this.h = h;
@@ -29,9 +31,11 @@ public class Room {
 
 		buildRoom();
 		buildWalls(vert + 2, horz + 2);
+		combine();
 	}
 
-	public Room() {	} // used for Halls
+	public Room() {
+	} // used for Halls
 
 	private void buildRoom() {
 
@@ -39,7 +43,7 @@ public class Room {
 		buildEdges();
 		fillMiddle();
 
-		for (Tile[] t : room) {
+		for (Tile[] t : floor) {
 			for (Tile t2 : t) {
 				t2.setSolid(false);
 				t2.setPosition(Position.MIDDLE);
@@ -94,51 +98,63 @@ public class Room {
 
 	private void buildCorners() {
 		// top left
-		room[0][0] = new Tile(floor.getTile(0, 0));
+		floor[0][0] = new Tile(floors.getTile(0, 0));
 
 		// top right
-		room[0][horz - 1] = new Tile(floor.getTile(0, 2));
+		floor[0][horz - 1] = new Tile(floors.getTile(0, 2));
 
 		// bottom left
-		room[vert - 1][0] = new Tile(floor.getTile(2, 0));
+		floor[vert - 1][0] = new Tile(floors.getTile(2, 0));
 
 		// bottom right
-		room[vert - 1][horz - 1] = new Tile(floor.getTile(2, 2));
+		floor[vert - 1][horz - 1] = new Tile(floors.getTile(2, 2));
 	}
 
 	private void buildEdges() {
 		// horizontal edges
 		for (int i = 1; i < vert - 1; i++) {
-			room[i][0] = new Tile(floor.getTile(1, 0)); // top edge
+			floor[i][0] = new Tile(floors.getTile(1, 0)); // top edge
 			// bottom edge
-			room[i][horz - 1] = new Tile(floor.getTile(1, 2));
+			floor[i][horz - 1] = new Tile(floors.getTile(1, 2));
 		}
 
 		// vertical edges
 		for (int i = 1; i < horz - 1; i++) {
-			room[0][i] = new Tile(floor.getTile(0, 1)); // left edge
+			floor[0][i] = new Tile(floors.getTile(0, 1)); // left edge
 			// right edge
-			room[vert - 1][i] = new Tile(floor.getTile(2, 1));
+			floor[vert - 1][i] = new Tile(floors.getTile(2, 1));
 		}
 	}
 
 	private void fillMiddle() {
 		for (int i = 0; i < vert; i++) {
 			for (int j = 0; j < horz; j++) {
-				if (room[i][j] == null) {
-					room[i][j] = new Tile(floor.getTile(1, 1));
+				if (floor[i][j] == null) {
+					floor[i][j] = new Tile(floors.getTile(1, 1));
 				}
 			}
 		}
 
 	}
 
-	public Tile[][] getRoom() {
-		return room;
+	private void combine() {
+		for (int i = 0; i < floor.length; i++) {
+			for (int j = 0; j < floor[i].length; j++) {
+				room[i + 1][j + 1] = floor[i][j];
+			}
+		}
+
+		for (int i = 0; i < room.length; i++) {
+			for (int j = 0; j < room[i].length; j++) {
+				if (wall[i][j] != null) { // && room[i][j] == null) {
+					room[i][j] = wall[i][j];
+				}
+			}
+		}
 	}
 
-	public Tile[][] getWalls() {
-		return wall;
+	public Tile[][] getRoom() {
+		return room;
 	}
 
 	public int getWidth() {
