@@ -48,15 +48,19 @@ public class Play extends GameState {
 	public void handleInput() {
 		if (MyInput.isDown(MyInput.KEY_UP) && (MyInput.isPressed(MyInput.KEY_UP))) { // north
 			player.move(0);
+			map.up();
 		}
-		if (MyInput.isDown(MyInput.KEY_LEFT) && (MyInput.isPressed(MyInput.KEY_LEFT))) { // east
+		if (MyInput.isDown(MyInput.KEY_LEFT) && (MyInput.isPressed(MyInput.KEY_LEFT))) { // west
 			player.move(1);
+			map.left();
 		}
 		if (MyInput.isDown(MyInput.KEY_DOWN) && (MyInput.isPressed(MyInput.KEY_DOWN))) { // south
 			player.move(2);
+			map.down();
 		}
-		if (MyInput.isDown(MyInput.KEY_RIGHT) && (MyInput.isPressed(MyInput.KEY_RIGHT))) { // west
+		if (MyInput.isDown(MyInput.KEY_RIGHT) && (MyInput.isPressed(MyInput.KEY_RIGHT))) { // east
 			player.move(3);
+			map.right();
 		}
 	}
 

@@ -15,17 +15,10 @@ public class Map {
 	// random # = random.nextInt(max - minimum + 1) + minimum
 	Random rand;
 	private boolean loadHall = false;
-	private int numRooms = 0;
+//	private int numRooms = 0;
 
-	public Map() {
-
-		Room room1 = new Room(8, 6, TileSet.stoneFloor, TileSet.stoneWall, 0);
-		map = room1.getRoom();
-
-		rand = new Random(0L);
-		// testMap();
-	}
-
+	public Map() {}
+	
 	public Map(int w, int h, long seed) {
 		map = new Tile[h][w];
 		rand = new Random(seed);
@@ -33,10 +26,33 @@ public class Map {
 		// generateMap();
 		// hall();
 
-		Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
-		loadRoom(r, 0, 0);
+//		Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
+//		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
+//		loadRoom(r, 0, 0);
 	}
 
+	public void up() {
+		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
+		loadRoom(r, 0, 0);
+	}
+	
+	public void down() {
+		map = new Tile[map.length][map[0].length];
+	}
+	
+	public void left(){
+		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
+		loadRoom(r, 10, 0);
+	}
+	
+	public void right() {
+		Tile[][] temp = copyMap();
+		
+		temp[0][0] = new Tile(TileSet.stoneFloor.getTile(1, 1));
+		temp[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 1));
+		temp[0][1] = new Tile(TileSet.stoneFloor.getTile(1, 1));
+	}
+	
 	public void generateMap() {
 		Random random = new Random(1L);
 		Room r;
@@ -172,18 +188,16 @@ public class Map {
 				for (int j = 0; j < map[i].length; j++) {
 					if (map[i][j] != null) {
 						map[i][j].render(sb, i, j);
-						// System.out.println(map[i][j].isSolid());
 					}
 				}
 			}
-			// System.out.println("_______________");
 		}
 	}
 
 	public void loadRoom(Room r, int x, int y) {
 		// Used to buffer the room
-		Tile[][] bufferMap = new Tile[map.length][map[0].length];
-		// Load the floor
+		Tile[][] tempMap = copyMap();
+		// Load the room
 		Tile[][] room = r.getRoom();
 
 		if (y + r.getHeight() >= map.length || y < 0)
@@ -191,19 +205,19 @@ public class Map {
 		else if (x + r.getWidth() >= map[0].length || x < 0)
 			return;
 
-		for (int i = y; i < r.getHeight() + y; i++) {
-			for (int j = x; j < r.getWidth() + x; j++) {
-				if (map[i][j] == null) {
-					bufferMap[i][j] = room[i - y][j - x];
+		for (int i = y; i < r.getHeight(); i++) {
+			for (int j = x; j < r.getWidth(); j++) {
+				if (tempMap[i][j] == null) {
+					tempMap[i][j] = room[i][j];
 				} else {
 					return;
 				}
 			}
 		}
 
-		bufferMap(bufferMap);
-		bufferMap = new Tile[map.length][map[0].length];
-
+		// at this point, the room is valid, load it
+		map = tempMap;
+		
 		roomLoaded = true;
 		loadHall = true;
 
@@ -211,17 +225,13 @@ public class Map {
 		System.out.printf("at postion x: %d, y: %d\n", x, y);
 	}
 
-	public void bufferMap(Tile[][] bMap) {
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[i].length; j++) {
-				Tile t = bMap[i][j];
-				if (t != null) {
-					map[i][j] = t;
-				}
-			}
+	public Tile[][] copyMap() {
+		Tile[][] t = new Tile[map.length][];
+		
+		for(int i = 0; i < map.length; i++) {
+			t[i] = map[i].clone();
 		}
-
-		bMap = new Tile[map.length][map[0].length];
+		return t;
 	}
 
 	public Vector2 loadHall(Hall h, Tile[][] map, int x, int y) {
@@ -251,9 +261,6 @@ public class Map {
 		}
 
 		ret = new Vector2(h.getEndPt().y + x, h.getEndPt().x + y);
-
-		bufferMap(bufferMap);
-		bufferMap = new Tile[map.length][map[0].length];
 
 		// Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
 		// TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);

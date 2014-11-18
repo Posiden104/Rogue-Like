@@ -138,17 +138,16 @@ public class Room {
 	}
 
 	private void combine() {
-		for (int i = 0; i < floor.length; i++) {
-			for (int j = 0; j < floor[i].length; j++) {
-				room[i + 1][j + 1] = floor[i][j];
-			}
-		}
+		
+		room = new Tile[wall.length][];
 
 		for (int i = 0; i < room.length; i++) {
-			for (int j = 0; j < room[i].length; j++) {
-				if (wall[i][j] != null) { // && room[i][j] == null) {
-					room[i][j] = wall[i][j];
-				}
+			room[i] = wall[i].clone(); 
+		}
+
+		for (int i = 1; i < room.length - 1; i++) {
+			for (int j = 1; j < room[i].length - 1; j++) {
+				room[i][j] = floor[i - 1][j - 1];
 			}
 		}
 	}
