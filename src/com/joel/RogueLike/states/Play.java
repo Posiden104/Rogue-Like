@@ -82,8 +82,8 @@ public class Play extends GameState {
 
 		// render tilesets
 		if (debug) {
-			TileSet.stoneFloor.render(sb);
-			TileSet.stoneWall.render(sb);
+			TileSet.stoneFloor.render(sb, 100);
+			TileSet.stoneWall.render(sb, 350);
 		}
 		
 		// render player
@@ -93,10 +93,6 @@ public class Play extends GameState {
 		// render HUD
 		sb.setProjectionMatrix(hudCam.combined);
 		hud.render(sb);
-
-		// draw tilemap
-		// tmRenderer.setView(cam);
-		// tmRenderer.render();
 
 	}
 

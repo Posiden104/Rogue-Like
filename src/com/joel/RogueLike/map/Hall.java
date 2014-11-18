@@ -1,8 +1,9 @@
 package com.joel.RogueLike.map;
 
+import com.badlogic.gdx.math.Vector2;
 import com.joel.RogueLike.map.Tile.Position;
 
-public class Hall {
+public class Hall extends Room {
 
 	private int w;
 	private int h;
@@ -11,11 +12,14 @@ public class Hall {
 
 	private Tile[][] hall;
 	public Room r;
+	
+	private Vector2 endPt;
 
 	private TileSet floor;
 	private TileSet walls;
 
 	public Hall(int size, TileSet floor, TileSet walls, boolean vert) {
+		super();
 		if (vert) {
 			this.w = 3;
 			this.h = size;
@@ -38,57 +42,62 @@ public class Hall {
 	public void generate() {
 
 		if (vert) {
-			generateVertHall();
+			buildHall(3, h);
 		} else {
-			generateHorzHall();
+			buildHall(w, 3);
 		}
 	}
 
-	private void generateVertHall() {
-		buildEdges(3, h);
-		buildWalls(3, h);
-	}
-
-	private void generateHorzHall() {
-		buildEdges(w, 3);
-		buildWalls(w, 3);
-	}
-
-	private void buildEdges(int w, int h) {
-		if (vert) { // horizontal edges
-			for (int i = 0; i < h; i++) {
-				hall[i][1] = new Tile(floor.getTile(1, 1), i, 1); // top edge
-			}
-		} else { // vertical edges
-			for (int i = 0; i < w; i++) {
-				hall[1][i] = new Tile(floor.getTile(1, 1), 1, i); // left edge
-			}
-		}
-	}
-
-	private void buildWalls(int w, int h) {
+	private void buildHall(int w, int h) {
 		if (vert) { // Vertical sides
 			for (int i = 0; i < h; i++) {
-				hall[i][0] = new Tile(walls.getTile(1, 0), i, 0); // Left
+				hall[i][0] = new Tile(walls.getTile(1, 0)); // Left wall
 				hall[i][0].setPosition(Position.WEST);
 				hall[i][0].setSolid(true);
 
-				hall[i][2] = new Tile(walls.getTile(1, 0), i, 2); // Right
+				hall[i][1] = new Tile(floor.getTile(1, 3)); // Middle
+				hall[i][1].setPosition(Position.MIDDLE);
+				hall[i][1].setSolid(false);
+
+				hall[i][2] = new Tile(walls.getTile(1, 0)); // Right wall
 				hall[i][2].setPosition(Position.EAST);
 				hall[i][2].setSolid(true);
 			}
+			
+			hall[0][1] = new Tile(floor.getTile(0, 3)); // North tile
+			hall[0][1].setPosition(Position.NORTH);
+			hall[0][1].setSolid(false);
+			
+			hall[h - 1][1] = new Tile(floor.getTile(2, 3)); // South tile
+			hall[h - 1][1].setPosition(Position.SOUTH);
+			hall[h - 1][1].setSolid(false);
+			
+			endPt = new Vector2(h - 1, 1);
 
 		} else { // Horizontal sides
 			for (int i = 0; i < w; i++) {
-				hall[0][i] = new Tile(walls.getTile(0, 1), 0, i); // Top
+				hall[0][i] = new Tile(walls.getTile(0, 1)); // Top wall
 				hall[0][i].setPosition(Position.NORTH);
 				hall[0][i].setSolid(true);
 
-				hall[2][i] = new Tile(walls.getTile(0, 1), 2, i); // Bottom
+				hall[1][i] = new Tile(floor.getTile(1, 5)); // Middle
+				hall[1][i].setPosition(Position.MIDDLE);
+				hall[1][i].setSolid(false);
+
+				hall[2][i] = new Tile(walls.getTile(0, 1)); // Bottom wall
 				hall[2][i].setPosition(Position.SOUTH);
 				hall[2][i].setSolid(true);
 			}
+			
+			hall[1][0] = new Tile(floor.getTile(1, 4)); // East tile
+			hall[1][0].setPosition(Position.WEST);
+			hall[1][0].setSolid(false);
+			
+			hall[1][w - 1] = new Tile(floor.getTile(1, 6)); // West tile
+			hall[1][w - 1].setPosition(Position.EAST);
+			hall[1][w - 1].setSolid(false);
 
+			endPt = new Vector2(1, w - 1);
 		}
 	}
 
@@ -108,4 +117,8 @@ public class Hall {
 		return hall;
 	}
 
+	public Vector2 getEndPt() {
+		return endPt;
+	}
+	
 }

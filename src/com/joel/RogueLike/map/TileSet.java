@@ -25,14 +25,14 @@ public class TileSet extends Sprite{
 		return tiles[x][y];
 	}
 	
-	public void render(SpriteBatch sb) {
+	public void render(SpriteBatch sb, int x) {
 		
 		sb.begin();
 		for (int i = 0; i < tiles.length; i++) {
 			for(int j = 0; j < tiles[i].length; j++) {
-				sb.draw(tiles[i][j], 200 + (j * 32 - Play.getPlayerOffset().x), (i * -17 - Play.getPlayerOffset().y));
-				HUD.drawString(sb, i + " " + j, 200 + (j * 32 - Play.getPlayerOffset().x), (i * -17 - Play.getPlayerOffset().y));
-				sb.draw(tiles[i][j], 200 + (j * 17 - Play.getPlayerOffset().x), -100 + (i * -17 - Play.getPlayerOffset().y));
+				sb.draw(tiles[i][j], x + (j * 32 - Play.getPlayerOffset().x), (i * -17 - Play.getPlayerOffset().y));
+				HUD.drawString(sb, i + " " + j, x + (j * 32 - Play.getPlayerOffset().x), (i * -17 - Play.getPlayerOffset().y));
+				sb.draw(tiles[i][j], x + (j * 17 - Play.getPlayerOffset().x), -100 + (i * -17 - Play.getPlayerOffset().y));
 			}
 		}
 		sb.end();

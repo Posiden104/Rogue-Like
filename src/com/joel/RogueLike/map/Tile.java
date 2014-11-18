@@ -23,7 +23,7 @@ public class Tile extends Sprite {
 
 	private Position pos;
 
-	public Tile(TextureRegion tex, int x, int y) {
+	public Tile(TextureRegion tex) {
 		if (Play.debug) {
 			this.x = 32 * y; // adds spacing in the tiles
 			this.y = 17 * x;
@@ -37,7 +37,7 @@ public class Tile extends Sprite {
 		pos = Position.MIDDLE;
 	}
 
-	public Tile(TextureRegion[] tex, int x, int y) {
+	public Tile(TextureRegion[] tex) {
 		if (Play.debug) {
 			this.x = 32 * y; // adds spacing in tiles
 			this.y = 17 * x;
