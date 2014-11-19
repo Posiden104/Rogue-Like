@@ -15,44 +15,39 @@ public class Map {
 	// random # = random.nextInt(max - minimum + 1) + minimum
 	Random rand;
 	private boolean loadHall = false;
-//	private int numRooms = 0;
 
-	public Map() {}
-	
+	// private int numRooms = 0;
+
+	public Map() {
+	}
+
 	public Map(int w, int h, long seed) {
 		map = new Tile[h][w];
 		rand = new Random(seed);
 
 		// generateMap();
-		// hall();
-
-//		Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
-//		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
-//		loadRoom(r, 0, 0);
 	}
 
 	public void up() {
 		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
 		loadRoom(r, 0, 0);
 	}
-	
+
 	public void down() {
-		map = new Tile[map.length][map[0].length];
+		Hall h = new Hall(10, TileSet.stoneFloor, TileSet.stoneWall, false);
+		Vector2 pos = loadHall(h, 9, 4);
+		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 2);
+		loadRoom(r, (int) pos.x, (int) pos.y);
 	}
-	
-	public void left(){
-		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
-		loadRoom(r, 10, 0);
+
+	public void left() {
+//		Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 3);
+//		loadRoom(r, 10, 0);
 	}
-	
+
 	public void right() {
-		Tile[][] temp = copyMap();
-		
-		temp[0][0] = new Tile(TileSet.stoneFloor.getTile(1, 1));
-		temp[1][0] = new Tile(TileSet.stoneFloor.getTile(1, 1));
-		temp[0][1] = new Tile(TileSet.stoneFloor.getTile(1, 1));
 	}
-	
+
 	public void generateMap() {
 		Random random = new Random(1L);
 		Room r;
@@ -64,8 +59,8 @@ public class Map {
 				r = new Room();
 				isHall = true;
 			} else { // for Rooms size: 5 - 10
-			// r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
-			// TileSet.stoneFloor, TileSet.stoneWall, i);
+				// r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
+				// TileSet.stoneFloor, TileSet.stoneWall, i);
 				r = new Room();
 				isHall = true;
 			}
@@ -137,7 +132,7 @@ public class Map {
 			}
 
 			if (r instanceof Hall) {
-				loc = loadHall((Hall) r, map, (int) loc.x, (int) loc.y);
+				loc = loadHall((Hall) r, (int) loc.x, (int) loc.y);
 				if (loc == null) {
 					loadHall = true;
 				}
@@ -217,55 +212,31 @@ public class Map {
 
 		// at this point, the room is valid, load it
 		map = tempMap;
-		
+
 		roomLoaded = true;
 		loadHall = true;
 
-		System.out.printf("Room %d loaded\n", r.getRoomNumber());
-		System.out.printf("at postion x: %d, y: %d\n", x, y);
+		if (r instanceof Room) {
+			System.out.printf("Room %d loaded\n", r.getRoomNumber());
+			System.out.printf("at postion x: %d, y: %d\n", x, y);
+		}
 	}
 
 	public Tile[][] copyMap() {
 		Tile[][] t = new Tile[map.length][];
-		
-		for(int i = 0; i < map.length; i++) {
+
+		for (int i = 0; i < map.length; i++) {
 			t[i] = map[i].clone();
 		}
 		return t;
 	}
 
-	public Vector2 loadHall(Hall h, Tile[][] map, int x, int y) {
+	public Vector2 loadHall(Hall h, int x, int y) {
 		Vector2 ret = null;
-		// Used to buffer the hall
-		Tile[][] bufferMap = new Tile[map.length][map[0].length];
 
-		Tile[][] hall = h.getHall();
-
-		// Load the floor
-		for (int i = y; i < h.getHeight() + y; i++) {
-			for (int j = x; j < h.getWidth() + x; j++) {
-				if (i >= map.length || i < 0) {
-					bufferMap = null;
-					return null;
-				} else if (j >= map[i].length || j < 0) {
-					bufferMap = null;
-					return null;
-				}
-				if (map[i][j] == null || (map[i][j].isSolid() && hall[i - y][j - x].isSolid())) {
-					bufferMap[i][j] = hall[i - y][j - x];
-				} else {
-					bufferMap = null;
-					return null;
-				}
-			}
-		}
+		loadRoom(h, x, y);
 
 		ret = new Vector2(h.getEndPt().y + x, h.getEndPt().x + y);
-
-		// Room r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5,
-		// TileSet.stoneFloor, TileSet.stoneWall, ++numRooms);
-		// loadRoom(r, (int) ret.x, (int) ret.y);
-		// loadHall = true;
 
 		loadHall = false;
 
@@ -277,7 +248,7 @@ public class Map {
 
 	public void hall() {
 		Hall h = new Hall(10, TileSet.stoneFloor, TileSet.stoneWall, true);
-		loadHall(h, map, 1, 1);
+		loadHall(h, 1, 1);
 	}
 
 	public void testMap() {

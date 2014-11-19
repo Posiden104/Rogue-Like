@@ -29,6 +29,9 @@ public class Room {
 		vert = this.h = h;
 		horz = this.w = w;
 
+		this.h += 2;
+		this.w += 2;
+		
 		buildRoom();
 		buildWalls(vert + 2, horz + 2);
 		combine();
@@ -152,6 +155,19 @@ public class Room {
 		}
 	}
 
+	public void printRoom() {
+		for(int i = 0; i < room.length; i++) {
+			for (int j = 0; j < room[i].length; j++) {
+				if(room[i][j].isSolid()) {
+					System.out.print("#");
+				} else {
+					System.out.print("_");
+				}
+			}
+			System.out.println();
+		}
+	}
+	
 	public Tile[][] getRoom() {
 		return room;
 	}

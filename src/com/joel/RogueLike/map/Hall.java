@@ -113,7 +113,7 @@ public class Hall extends Room {
 		return vert;
 	}
 
-	public Tile[][] getHall() {
+	public Tile[][] getRoom() {
 		return hall;
 	}
 
