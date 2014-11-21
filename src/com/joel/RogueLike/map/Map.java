@@ -12,7 +12,7 @@ public class Map {
 
 	// random # = random.nextInt(max - minimum + 1) + minimum
 	Random rand;
-	private boolean loadHall = true;
+	Random random = new Random(1L);
 
 	// private int numRooms = 0;
 
@@ -29,124 +29,177 @@ public class Map {
 		generateMap();
 	}
 
-	public void up() {
-		// Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 1);
-		// loadRoom(r, 1, 1);
-	}
+	// maybe TODO: make generated halls to pick from
 
-	boolean down = true;
-
-	public void down() {
-		if (!down) {
-			Hall h = new Hall(10, TileSet.stoneFloor, TileSet.stoneWall, false);
-			Vector2 pos = loadHall(h, 10, 5);
-			System.out.println(pos);
-			// 19, 6
-			Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 2);
-			loadRoom(r, (int) pos.x + 1, (int) pos.y - 1 - rand.nextInt(r.getHeight()));
-			down = true;
-		}
-	}
-
-	public void left() {
-		// Room r = new Room(7, 10, TileSet.stoneFloor, TileSet.stoneWall, 3);
-		// loadRoom(r, 10, 0);
-	}
-
-	public void right() {
-
-	}
-
-	//TODO: make generated halls to pick from
-	
 	public void generateMap() {
-		Random random = new Random(1L);
-		Room r;
 		Vector2 loc = new Vector2(-1, -1);
 
-		for (int i = 0; i < 100; i++) {
-			r = new Room();
-			if (loadHall) { // for Halls size 5 - 20
-				if ((loc = pickLocation()) == null) {
-					continue;
-				}
-				if(map[(int) loc.y][(int) loc.x].getPos() == Position.EAST) {
-					loc = pickLocation();
-				}
-			} else { // for Rooms size: 5 - 10
-				r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i);
-				if(loc.x < 0 || loc.y < 0) 
-					continue;
-				System.out.printf("%d, %d,\n w: %d, h: %d\n", (int) loc.x, (int) loc.y, r.getWidth(), r.getHeight());
-//				System.out.println(map[(int) loc.y][(int) loc.x].getPos());
-			}
+		for (int i = 0; i < 20; i++) {
+			Tile[][] backupMap = copyMap();
+			Hall h;
+			Room r;
+			Tile t;
+			Tile hTile;
+			Vector2 endPt;
 
-			if (map[(int) loc.y][(int) loc.x] == null) {
-				loadHall = true;
+			if ((loc = pickLocation()) == null) {
 				continue;
 			}
 
-			switch (map[(int) loc.y][(int) loc.x].getPos()) {
-			case NORTH:
-				if (!loadHall) {
-					loc.y += r.getHeight() + 1;
-					loc.x -= random.nextInt(r.getWidth());
-				} else {
-					loc.y += r.getHeight();
-					loc.x -= 1;
-					r = new Hall(rand.nextInt(15) + 5, TileSet.stoneFloor, TileSet.stoneWall, true);
-				}
-				break;
-			case SOUTH:
-				if (!loadHall) {
-					loc.y -= 1;
-					loc.x -= random.nextInt(r.getWidth());
-				} else {
-					loc.y += 1;
-					loc.x -= 1;
-					r = new Hall(rand.nextInt(15) + 5, TileSet.stoneFloor, TileSet.stoneWall, true);
-				}
-				break;
-			case EAST:
-				if (!loadHall) {
-					loc.y -= random.nextInt(r.getHeight());
-					loc.x += 1;
-				} else {
-					loc.y -= 1;
-					loc.x += 1;
-					r = new Hall(rand.nextInt(15) + 5, TileSet.stoneFloor, TileSet.stoneWall, false);
-				}
-				break;
-			case WEST:
-				if (!loadHall) {
-					loc.x -= r.getWidth() - 1;
-					loc.y -= random.nextInt(r.getHeight());
-				} else {
-					loc.x -= r.getWidth();
-					loc.y -= 1;
-					r = new Hall(rand.nextInt(15) + 5, TileSet.stoneFloor, TileSet.stoneWall, false);
-				}
-				break;
-			case CORNER:
-				continue;
-			case MIDDLE:
-				continue;
-			default:
+			if (loc.x < 0 || loc.y < 0) // should never be utilized
 				continue;
 
+			t = map[(int) loc.y][(int) loc.x];
+			if (t == null) { // should never be utilized
+				continue;
 			}
 
-			if (r instanceof Hall) {
-				System.out.println("hall: " + (int) loc.x + ", " + (int) loc.y); 
-				loc = loadHall((Hall) r, (int) loc.x, (int) loc.y);
-				if (loc == null) {
-					loadHall = true;
-				}
+			// for halls length 5 - 20
+			h = new Hall(rand.nextInt(16) + 5, TileSet.stoneFloor, TileSet.stoneWall, (t.getPos() == Position.NORTH || t.getPos() == Position.SOUTH) ? true : false);
+			loc = adjHall(h, loc);
+
+			if ((endPt = loadHall(h, (int) loc.x, (int) loc.y)) != null) {
+				System.out.printf("%d, %d\n", (int) endPt.x, (int) endPt.y);
+				hTile = map[(int) endPt.y][(int) endPt.x];
 			} else {
-				loadHall = loadRoom(r, (int) loc.x, (int) loc.y);
-				loadHall = true;
+				map = backupMap;
+				continue;
+			}
+
+			if (hTile == null) {
+				map = backupMap;
+				continue;
+			}
+
+			// for Rooms size: 5 - 10
+			r = new Room(rand.nextInt(6) + 5, rand.nextInt(6) + 5, TileSet.stoneFloor, TileSet.stoneWall, i + 1);
+
+			if (adjRoom(endPt, r, hTile.getPos()) == null) {
+				System.out.println("loc = null");
+				map = backupMap;
+				continue;
 			}
 		}
+
+	}
+
+	public Vector2 adjRoom(Vector2 origin, Room r, Position p) {
+		Vector2 loc = new Vector2(origin.x, origin.y);
+		int newRan;
+		switch (p) {
+		case NORTH:
+			loc.y += r.getHeight() + 1;
+
+			for (int i = 0; i < 5; i++) {
+				newRan = random.nextInt(r.getWidth());
+				if (loadRoom(r, (int) loc.x - newRan, (int) loc.y)) {
+					System.out.println("random");
+					return new Vector2(loc.x - newRan, loc.y);
+				}
+			}
+
+			for (int i = 0; i < r.getWidth(); i++) {
+				loc.x -= 1;
+				if (loadRoom(r, (int) loc.x, (int) loc.y)) {
+					return loc;
+				}
+			}
+			break;
+		case SOUTH:
+			loc.y += 1;
+
+			for (int i = 0; i < 5; i++) {
+				newRan = random.nextInt(r.getWidth());
+				if (loadRoom(r, (int) loc.x - newRan, (int) loc.y)) {
+					System.out.println("random");
+					return new Vector2(loc.x - newRan, loc.y);
+				}
+			}
+
+			for (int i = 0; i < r.getWidth(); i++) {
+				loc.x -= 1;
+				if (loadRoom(r, (int) loc.x, (int) loc.y)) {
+					return loc;
+				}
+			}
+			break;
+		case EAST:
+			loc.x += 1;
+
+			for (int i = 0; i < 5; i++) {
+				newRan = random.nextInt(r.getHeight());
+				if (loadRoom(r, (int) loc.x, (int) loc.y - newRan)) {
+					System.out.println("random");
+					return new Vector2(loc.x, loc.y - newRan);
+				}
+			}
+
+			for (int i = 0; i < r.getHeight(); i++) {
+				loc.y -= 1;
+				if (loadRoom(r, (int) loc.x, (int) loc.y)) {
+					return loc;
+				}
+			}
+
+			break;
+		case WEST:
+			loc.x -= r.getWidth() - 1;
+
+			for (int i = 0; i < 5; i++) {
+				newRan = random.nextInt(r.getHeight());
+				System.out.println("random");
+				if (loadRoom(r, (int) loc.x, (int) loc.y - newRan)) {
+					return new Vector2(loc.x, loc.y - newRan);
+				}
+			}
+
+			for (int i = 0; i < r.getHeight(); i++) {
+				loc.y -= 1;
+				if (loadRoom(r, (int) loc.x, (int) loc.y)) {
+					return loc;
+				}
+			}
+			break;
+		case CORNER:
+			break;
+		case MIDDLE:
+			break;
+		default:
+			break;
+
+		}
+
+		return null;
+	}
+
+	public Vector2 adjHall(Hall h, Vector2 loc) {
+		switch (map[(int) loc.y][(int) loc.x].getPos()) {
+		case NORTH:
+			loc.y += h.getHeight() + 1;
+			loc.x -= 1;
+			break;
+		case SOUTH:
+			loc.y += 1;
+			loc.x -= 1;
+			break;
+		case EAST:
+			loc.y -= 1;
+			loc.x += 1;
+			break;
+		case WEST:
+			loc.x -= h.getWidth() - 1;
+			loc.y -= 1;
+			break;
+		case CORNER:
+			return null;
+		case MIDDLE:
+			return null;
+		default:
+			return null;
+
+		}
+
+		return loc;
 
 	}
 
@@ -171,17 +224,14 @@ public class Map {
 				case MIDDLE:
 					break;
 				case NORTH:
-					System.out.println("north");
 					return new Vector2(x, y);
 				case SOUTH:
-					System.out.println("south");
 					return new Vector2(x, y);
 				case WEST:
-					System.out.println("west");
 					return new Vector2(x, y);
 				default:
 					break;
-					
+
 				}
 			}
 
@@ -216,30 +266,29 @@ public class Map {
 	}
 
 	public boolean loadRoom(Room r, int x, int y) {
-		// Used to buffer the room
-		Tile[][] tempMap = copyMap();
+		// Used to buffer the map
+		Tile[][] buffMap = copyMap();
 		// Load the room
 		Tile[][] room = r.getRoom();
 
-		if (y + r.getHeight() >= map.length || y < 0)
+		if (y + r.getHeight() >= buffMap.length || y < 0) {
 			return false;
-		else if (x + r.getWidth() >= map[0].length || x < 0)
+		} else if (x + r.getWidth() >= buffMap[0].length || x < 0) {
 			return false;
+		}
 
 		for (int i = y; i < r.getHeight() + y; i++) {
 			for (int j = x; j < r.getWidth() + x; j++) {
-				if (tempMap[i][j] == null) {
-					tempMap[i][j] = room[i - y][j - x];
+				if (buffMap[i][j] == null) {
+					buffMap[i][j] = room[i - y][j - x];
 				} else {
 					return false;
 				}
 			}
 		}
 
-		// at this point, the room is valid, load it
-		map = tempMap;
-
-		loadHall = true;
+		// At this point the room is valid, load it
+		map = buffMap;
 
 		if (!(r instanceof Hall)) {
 			System.out.printf("Room %d loaded\n", r.getRoomNumber());
@@ -264,8 +313,6 @@ public class Map {
 		if (loadRoom(h, x, y)) {
 
 			ret = new Vector2(h.getEndPt().x + x, h.getEndPt().y + y);
-
-			loadHall = false;
 
 			System.out.printf("Hall loaded\n");
 
