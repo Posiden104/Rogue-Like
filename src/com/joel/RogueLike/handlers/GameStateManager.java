@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import com.joel.RogueLike.main.Game;
 import com.joel.RogueLike.states.GameState;
-import com.joel.RogueLike.states.LevelSelect;
 import com.joel.RogueLike.states.Menu;
 import com.joel.RogueLike.states.Play;
 
@@ -16,7 +15,6 @@ public class GameStateManager {
 	
 	public static final int MENU = 83774392;
 	public static final int PLAY = 388031654;
-	public static final int LEVEL_SELECT = -9238732;
 	
 	public GameStateManager(Game game) {
 		this.game = game;
@@ -37,7 +35,6 @@ public class GameStateManager {
 	private GameState getState(int state) {
 		if(state == MENU) return new Menu(this);
 		if(state == PLAY) return new Play(this);
-		if(state == LEVEL_SELECT) return new LevelSelect(this);
 		return null;
 	}
 	

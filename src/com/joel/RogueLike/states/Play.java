@@ -35,7 +35,7 @@ public class Play extends GameState {
 		boundedCam.setBounds(0, Game.V_WIDTH, 0, Game.V_HEIGHT);
 
 		// create player
-		Entity e = new Entity(1, -1, 200); 
+		Entity e = new Entity(0, 0, 200); 
 		player = new Player(e);
 
 		// create hud

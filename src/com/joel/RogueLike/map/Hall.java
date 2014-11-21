@@ -12,7 +12,7 @@ public class Hall extends Room {
 
 	private Tile[][] hall;
 	public Room r;
-	
+
 	private Vector2 endPt;
 
 	private TileSet floor;
@@ -63,16 +63,16 @@ public class Hall extends Room {
 				hall[i][2].setPosition(Position.EAST);
 				hall[i][2].setSolid(true);
 			}
-			
+
 			hall[0][1] = new Tile(floor.getTile(0, 3)); // North tile
 			hall[0][1].setPosition(Position.NORTH);
 			hall[0][1].setSolid(false);
-			
+
 			hall[h - 1][1] = new Tile(floor.getTile(2, 3)); // South tile
 			hall[h - 1][1].setPosition(Position.SOUTH);
 			hall[h - 1][1].setSolid(false);
-			
-			endPt = new Vector2(h - 1, 1);
+
+			endPt = new Vector2(1, h - 1);
 
 		} else { // Horizontal sides
 			for (int i = 0; i < w; i++) {
@@ -88,16 +88,29 @@ public class Hall extends Room {
 				hall[2][i].setPosition(Position.SOUTH);
 				hall[2][i].setSolid(true);
 			}
-			
+
 			hall[1][0] = new Tile(floor.getTile(1, 4)); // East tile
 			hall[1][0].setPosition(Position.WEST);
 			hall[1][0].setSolid(false);
-			
+
 			hall[1][w - 1] = new Tile(floor.getTile(1, 6)); // West tile
 			hall[1][w - 1].setPosition(Position.EAST);
 			hall[1][w - 1].setSolid(false);
 
-			endPt = new Vector2(1, w - 1);
+			endPt = new Vector2(w - 1, 1);
+		}
+	}
+
+	public void printRoom() {
+		for (int i = 0; i < hall.length; i++) {
+			for (int j = 0; j < hall[i].length; j++) {
+				if (hall[i][j].isSolid()) {
+					System.out.print("#");
+				} else {
+					System.out.print("_");
+				}
+			}
+			System.out.println();
 		}
 	}
 
@@ -120,5 +133,5 @@ public class Hall extends Room {
 	public Vector2 getEndPt() {
 		return endPt;
 	}
-	
+
 }

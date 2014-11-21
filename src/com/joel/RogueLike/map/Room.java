@@ -94,7 +94,7 @@ public class Room {
 		for (Tile[] t : wall) {
 			for (Tile t2 : t) {
 				if (t2 != null)
-					t2.setSolid(true);
+					t2.setSolid(true); //TODO: east is solid?
 			}
 		}
 	}
